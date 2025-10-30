@@ -19,7 +19,7 @@ This application supports **runtime environment variable injection**, meaning yo
 
 1. **Pull the latest image:**
    ```bash
-   docker pull ghcr.io/smartlabtech/ebay-scraper-fe:latest
+   docker pull ghcr.io/smartlabtech/church-system-fe:latest
    ```
 
 2. **Deploy using docker-compose.yml:**
@@ -27,13 +27,20 @@ This application supports **runtime environment variable injection**, meaning yo
    version: "3.8"
 
    services:
-     church-system:
-       image: ghcr.io/smartlabtech/ebay-scraper-fe:latest
+     church-system-frontend:
+       image: ghcr.io/smartlabtech/church-system-fe:latest
        container_name: church-system-fe
        restart: unless-stopped
        environment:
          - VITE_API_BASE_URL=https://your-backend-api.com/api/ar
          - VITE_API_CHURCH_ID=your-church-id-here
+       healthcheck:
+         # Frontend health check on port 80
+         test: ["CMD", "curl", "-f", "http://localhost:80/"]
+         interval: 30s
+         timeout: 10s
+         retries: 5
+         start_period: 40s
        ports:
          - "80:80"
        networks:
@@ -70,7 +77,12 @@ docker run -d \
   -p 80:80 \
   -e VITE_API_BASE_URL=https://your-backend-api.com/api/ar \
   -e VITE_API_CHURCH_ID=your-church-id-here \
-  ghcr.io/smartlabtech/ebay-scraper-fe:latest
+  --health-cmd="curl -f http://localhost:80/ || exit 1" \
+  --health-interval=30s \
+  --health-timeout=10s \
+  --health-retries=5 \
+  --health-start-period=40s \
+  ghcr.io/smartlabtech/church-system-fe:latest
 ```
 
 ## How It Works
