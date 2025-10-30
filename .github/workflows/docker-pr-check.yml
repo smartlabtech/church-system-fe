@@ -1,0 +1,35 @@
+name: Docker PR Validation
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/**'
+      - '!.github/workflows/docker-pr-check.yml'
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          load: true
+          tags: test-image:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Test image
+        run: |
+          docker image inspect test-image:${{ github.sha }}
+          echo "✅ Docker image builds successfully" 

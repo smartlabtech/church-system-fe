@@ -1,0 +1,68 @@
+#events{
+    // width: 50%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .event-details{
+        border: 1px solid grey;
+        border-radius: 10px;
+        margin: 10px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        max-width:350px ;
+    }
+    img{
+    margin: 0;
+    padding: 0;
+width: 100%;
+}
+
+
+
+.register-button{
+    border: 1px solid green;
+    background-color: transparent;
+    color: rgb(8, 8, 8);
+    border-radius: 5px;
+    margin: 10px;
+    width: 80%;
+    box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.3);
+    font-size: 0.8rem;
+
+}
+
+.waiting-list-button{
+    border: 1px solid grey;
+    background-color: transparent;
+color: black;
+    border-radius: 5px;
+    margin: 10px;
+    width: 80%;
+
+}
+
+.register-button:hover{
+    cursor: pointer;
+    background-color: bisque;
+}
+
+.waiting-list-button:hover{
+    cursor: pointer;
+    background-color: bisque;
+}
+    @media (max-width: 767px) {
+        flex-direction:column ;
+    }
+
+}
+
+.payment-method-card{
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+}

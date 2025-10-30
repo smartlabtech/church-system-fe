@@ -1,0 +1,32 @@
+[
+    {
+        "image": "https://i.postimg.cc/BbSHc3dp/Whats-App-Image-2023-08-12-at-13-38-09.jpg",
+        "name": "محمية وادي دجلة",
+        "description": "",
+        "cost": 70,
+        "percentage": 0,
+        "registrationEndDate": "Aug 15 2023 23:59:59 GMT+0300",
+        "waitingListEndDate": "Aug 15 2023 23:59:59 GMT+0300",
+        "hurryNote": false
+    },
+    {
+        "image": "https://i.postimg.cc/W1v7shz6/Whats-App-Image-2023-08-01-at-2-13-29-PM.jpg",
+        "name": "5elwa shabab 2023",
+        "description": "",
+        "cost": 750,
+        "percentage": 10,
+        "registrationEndDate": "Sep 05 2023 23:59:59 GMT+0300",
+        "waitingListEndDate": "Sep 05 2023 23:59:59 GMT+0300",
+        "hurryNote": true
+    },
+    {
+        "image": "https://i.postimg.cc/MZBbMYyj/Whats-App-Image-2023-10-14-at-14.jpg",
+        "name": "Luxor 2024",
+        "description": "",
+        "cost": 2300,
+        "percentage": 0,
+        "registrationEndDate": "Dec 30 2023 23:59:59 GMT+0300",
+        "waitingListEndDate": "Jan 15 2024 23:59:59 GMT+0300",
+        "hurryNote": false
+    }
+]

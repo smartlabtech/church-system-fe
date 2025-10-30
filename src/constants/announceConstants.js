@@ -1,0 +1,2 @@
+export const SET_ANNOUNCE = "SET_ANNOUNCE"
+export const RESET_ANNOUNCE = "RESET_ANNOUNCE"

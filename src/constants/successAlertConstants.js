@@ -1,0 +1,2 @@
+export const SET_SUCCESS = "SET_SUCCESS"
+export const RESET_SUCCESS = "RESET_SUCCESS"

@@ -1,0 +1,52 @@
+import "@mantine/core/styles.css"
+import "@mantine/notifications/styles.css"
+import "./App.css"
+import store from "./store"
+
+import {MantineProvider, createTheme, DirectionProvider} from "@mantine/core"
+import {Notifications} from "@mantine/notifications"
+import {Provider} from "react-redux"
+import {BrowserRouter} from "react-router-dom"
+import {useEffect} from "react"
+import {useTranslation} from "react-i18next"
+
+// Import the new simple layout
+import {SimpleLayout} from "./layout/SimpleLayout"
+
+// Import modern theme configuration
+import { mantineThemeConfig } from './utils/theme/churchTheme'
+
+// Create modern theme
+const modernTheme = createTheme(mantineThemeConfig)
+
+function AppContent() {
+  const {i18n} = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  useEffect(() => {
+    // Set document direction based on language
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr'
+    document.documentElement.lang = i18n.language
+  }, [i18n.language, isRTL])
+
+  return (
+    <DirectionProvider initialDirection={isRTL ? 'rtl' : 'ltr'}>
+      <MantineProvider theme={modernTheme}>
+        <Notifications position="top-center" autoClose={3000} />
+        <BrowserRouter>
+          <SimpleLayout />
+        </BrowserRouter>
+      </MantineProvider>
+    </DirectionProvider>
+  )
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
+  )
+}
+
+export default App

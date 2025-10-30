@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  branding-dashboard:
+    image: ghcr.io/smartlabtech/ebay-scraper-fe:latest
+    container_name: ebay-scraper-fe
+    restart: unless-stopped
+    environment:
+      # Runtime environment variables - configure these in Portainer
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-/api/ar}
+      - VITE_API_CHURCH_ID=${VITE_API_CHURCH_ID:-63cd11f4808cc1923ca5f3ca}
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    external: true
