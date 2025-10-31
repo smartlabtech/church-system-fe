@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/g/**)",
+      "Bash(yarn install)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\n🎨 Major UI/UX Modernization - Complete Church System Redesign\n\n## Theme & Colors\n- Changed primary color from purple to royal blue (#1E40AF) for trust/faith\n- Added gold secondary color (#B8860B) for divine/sacred elements  \n- Implemented teal accent (#059669) for growth and life\n- Created comprehensive theme system with proper spacing and shadows\n\n## Layout Architecture\n- Replaced restrictive AppShell layout with flexible SimpleLayout\n- Implemented dual dashboard system (Servant Dashboard + Admin Dashboard)\n- Added contextual navigation with smart sidebars\n- Separated main navigation from dashboard navigation\n- Admin panel now has distinct gold theme to differentiate from regular dashboard\n\n## Page Improvements\n- HomeScreen: Added cards, proper spacing, image carousel with thumbnails\n- ServantInScreen: Modern service cards with hover effects, better grid layout\n- AdminScreen: Grid layout for servants, improved visual hierarchy  \n- StoreScreen: Better product cards with hover effects, points display\n- AccountScreen: Organized with tabs (removed from dashboard nav)\n- All pages wrapped in proper containers with consistent spacing\n\n## Navigation Structure\n- Main Header: Home, Store, Dashboard (servants), Admin Dashboard (admins)\n- Dashboard Sidebar: Dashboard, Follow Up (no My Profile)\n- Admin Sidebar: Admin Overview only\n- Mobile: Responsive drawer with grouped sections\n- Service selectors contextually appear based on current page\n\n## Technical Changes\n- Migrated from yarn to npm with --legacy-peer-deps\n- Updated Mantine from v7 to v8 (attempted, reverted due to breaking changes)\n- Fixed all import errors (FaDashboard→FaTachometerAlt, FaShield→FaShieldAlt)\n- Removed all unnecessary added pages and layouts\n- Cleaned up AppShell dependencies\n\n## UX Improvements\n- Better spacing with consistent padding/margins\n- Hover effects on all interactive elements\n- Loading states and empty states\n- Visual feedback for active navigation items\n- Responsive design for all screen sizes\n- Cards with shadows for depth perception\n- Color-coded areas (blue for dashboard, gold for admin)\n\n## Files Removed\n- All unnecessary pages in src/pages/admin, dashboard, public, legal\n- AppShellLayout.jsx (replaced with SimpleLayout.jsx)\n- Extra App.jsx versions (kept only main one)\n- LoadingScreen component (using native Loader)\n\n🚀 The app now has a modern, professional church management system design\n   with improved user experience while maintaining all original functionality.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git log:*)",
+      "Bash(git config:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nMajor UI/UX Modernization & Responsive Design Improvements\n\n## 🎨 Landing Page Redesign\n- Completely redesigned homepage with responsive layout\n- Implemented AspectRatio component for consistent image display\n- Added responsive grid layouts (SimpleGrid) for better mobile experience\n- Enhanced event cards with icons and hover animations\n- Added gradient backgrounds for visual interest\n\n## 🏗️ Architecture Changes\n- Replaced AppShellLayout with flexible SimpleLayout\n- Implemented dual dashboard system (Servant & Admin)\n- Added contextual navigation based on user location\n- Separated main nav, dashboard nav, and admin nav items\n\n## 🎨 Theme & Design System\n- Updated color scheme: Royal Blue (#1E40AF) primary, Gold (#B8860B) secondary\n- Added comprehensive theme configuration with gradients and shadows\n- Improved spacing with responsive breakpoint objects\n- Enhanced hover effects with cubic-bezier transitions\n\n## 📱 Responsive Improvements\n- Mobile-first approach with breakpoint-based sizing\n- Responsive image thumbnails (50px mobile → 80px desktop)\n- Responsive grid columns (1 → 4 columns based on screen size)\n- Improved padding and spacing across all screens\n\n## 🔧 Technical Updates\n- Migrated from Yarn to NPM with --legacy-peer-deps\n- Fixed all import errors and missing components\n- Updated authentication to use mobile numbers\n- Removed unnecessary pages per requirements\n\n## 📂 Updated Files\n- src/layout/SimpleLayout.jsx - New flexible layout system\n- src/screens/HomeScreen.jsx - Responsive landing page\n- src/screens/ServantInScreen.jsx - Modern servant dashboard\n- src/screens/AdminScreen.jsx - Improved admin panel\n- src/screens/store/StoreScreen.jsx - Better product cards\n- src/utils/theme/churchTheme.js - Church-themed design system\n- .npmrc - NPM configuration for dependencies\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(find:*)",
+      "Bash(for file in \"src/actions/userServiceMetaActions.js\" \"src/actions/storeActions.js\" \"src/actions/shababEventRegisterActions.js\" \"src/actions/logActions.js\" \"src/actions/servicesActions.js\" \"src/actions/expenseActions.js\" \"src/actions/serviceBooksActions.js\" \"src/actions/bibleMCQActions.js\" \"src/actions/announcementActions.js\" \"src/actions/booksActions.js\" \"src/actions/adminActions.js\" \"src/actions/servedByActions.js\" \"src/actions/orderActions.js\" \"src/actions/servantInActions.js\")",
+      "Bash(do)",
+      "Bash(if [ -f \"/mnt/g/Church System/Church System FE/$file\" ])",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(cat:*)",
+      "Bash(docker build:*)",
+      "Bash(curl:*)",
+      "Bash(npm run build:*)",
+      "Bash(rm:*)",
+      "Bash(rmdir:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
