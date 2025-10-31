@@ -18,12 +18,13 @@
   <meta name="twitter:description" content="Events, Announcements, Bible Study, Online Gift Store and more" />
   <meta name="twitter:image"
     content="https://storage.googleapis.com/church-profiles/63cd11f4808cc1923ca5f3ca/site%20materials/ogimage.jpg?v=60" />
+
+  <!-- CRITICAL: Load runtime config FIRST (before Vite injects app script) -->
+  <script src="/env-config.js"></script>
 </head>
 
 <body>
   <div id="root"></div>
-  <!-- Load runtime environment configuration before app starts -->
-  <script src="/env-config.js"></script>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 

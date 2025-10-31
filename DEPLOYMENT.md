@@ -1,4 +1,11 @@
-# Production Deployment Guide
+# Production Deployment Guide - Monolithic Architecture
+
+## Overview
+
+This guide covers deploying the Church System in a **monolithic architecture** where:
+- Backend serves both API endpoints (`/api/*`) and frontend static files
+- Single Docker container runs the entire application
+- Frontend environment variables are injected at runtime (no rebuild needed)
 
 ## Development vs Production API Configuration
 
@@ -122,25 +129,182 @@ npm run build
 
 3. Deploy (they handle the build automatically)
 
+## Monolithic Deployment (Recommended)
+
+### Architecture
+```
+┌─────────────────────────────────────────┐
+│      Backend Container (port 3041)      │
+│                                         │
+│  ┌──────────────┐   ┌───────────────┐  │
+│  │   Express    │   │   Static      │  │
+│  │   API Server │   │   Files       │  │
+│  │   /api/*     │   │   (dist/)     │  │
+│  └──────────────┘   └───────────────┘  │
+└─────────────────────────────────────────┘
+```
+
+### Step-by-Step Deployment
+
+#### 1. Build Frontend
+```bash
+cd church-system-fe
+npm install --legacy-peer-deps
+npm run build
+```
+
+This creates `dist/` folder with:
+- `index.html`, `assets/`, `manifest.json`
+- `env-config.js` (runtime configuration template)
+- `service-worker.js` (PWA support)
+
+#### 2. Copy to Backend
+```bash
+# Copy entire dist folder to backend
+cp -r dist/* ../church-system-be/public/
+
+# Or create tarball for manual deployment
+tar -czf church-system-fe-v1.0.x.tar.gz dist/
+```
+
+#### 3. Configure Backend to Serve Frontend
+
+Your backend **must**:
+
+**A. Serve Static Files:**
+```javascript
+const express = require('express');
+const path = require('path');
+const app = express();
+
+// Serve static files from dist
+app.use(express.static(path.join(__dirname, 'public')));
+```
+
+**B. Generate Runtime Config Endpoint:**
+```javascript
+// Inject environment variables into frontend at runtime
+app.get('/env-config.js', (req, res) => {
+  const config = `
+window._env_ = {
+  VITE_API_BASE_URL: '${process.env.FRONTEND_API_BASE_URL || '/api/ar'}',
+  VITE_API_CHURCH_ID: '${process.env.FRONTEND_CHURCH_ID || '63cd11f4808cc1923ca5f3ca'}'
+};
+  `;
+  res.type('application/javascript');
+  res.send(config);
+});
+```
+
+**C. Handle Client-Side Routing:**
+```javascript
+// API routes first
+app.use('/api', apiRouter);
+
+// Fallback to index.html for client-side routing (MUST be last)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+```
+
+#### 4. Configure Environment Variables
+
+Create `.env` file in backend deployment directory:
+
+```bash
+# Copy template
+cp .env.docker .env
+
+# Edit with your values
+nano .env
+```
+
+**Frontend Runtime Variables:**
+```bash
+FRONTEND_API_BASE_URL=/api/ar
+FRONTEND_CHURCH_ID=63cd11f4808cc1923ca5f3ca
+```
+
+**Backend Variables:** (See `.env.docker` for full list)
+```bash
+DB_URI=mongodb://...
+JWT_SECRET=your-secret
+GMAIL_USER=...
+# ... etc
+```
+
+#### 5. Deploy with Docker Compose
+
+```bash
+# Start services
+docker-compose up -d
+
+# Check logs
+docker-compose logs -f backend
+
+# Verify
+curl http://localhost:3041/api          # API
+curl http://localhost:3041/env-config.js # Runtime config
+curl http://localhost:3041/              # Frontend
+```
+
+### Using Runtime Config in Code
+
+The frontend automatically loads runtime config via `src/config/env.js`:
+
+```javascript
+import config from '@/config/env';
+
+// Access values (runtime overrides build-time)
+console.log(config.apiBaseUrl);   // from FRONTEND_API_BASE_URL
+console.log(config.churchId);     // from FRONTEND_CHURCH_ID
+```
+
+Priority: **Runtime (window._env_) > Build-time (import.meta.env) > Defaults**
+
 ## Important Notes
 
-⚠️ **The Vite proxy configuration in `vite.config.js` does NOT work in production builds!**
+⚠️ **The Vite proxy configuration in `vite.config.js` ONLY works in development!**
 
-✅ **For production, you must either:**
-- Configure a reverse proxy on your web server (nginx/Apache)
-- Use CORS if frontend and backend are on different domains
-- Deploy both frontend and backend on the same domain
+✅ **For monolithic production deployment:**
+- Backend serves static files from `dist/` folder
+- Backend generates `/env-config.js` with runtime environment variables
+- Backend handles client-side routing (all routes → `index.html`)
+- No CORS configuration needed (same domain)
+- Frontend env variables can be changed without rebuilding
+
+✅ **Benefits of Runtime Configuration:**
+- Change API URL without rebuilding frontend
+- Different configs for staging/production without separate builds
+- Environment-specific values injected at container startup
 
 ## Troubleshooting
 
-### API calls return 404 in production
-- Check that your web server is configured to proxy `/api` requests
-- Verify the `VITE_API_BASE_URL` environment variable is set correctly
+### Frontend shows blank page
+- **Check:** Browser console for errors
+- **Verify:** `curl http://localhost:3041/env-config.js` returns valid JS
+- **Solution:** Ensure backend serves `/env-config.js` endpoint
 
-### CORS errors
-- Ensure backend has proper CORS configuration
-- Check that credentials are included in requests if needed
+### API calls return 404 in production
+- **Check:** Network tab shows correct API URL
+- **Verify:** `FRONTEND_API_BASE_URL` is set in Docker environment
+- **Solution:** Restart container after env changes
 
 ### API calls return HTML instead of JSON
-- This usually means the proxy is not configured correctly
-- In production, ensure your web server (nginx/Apache) is proxying `/api` requests to your backend
+- **Check:** Backend routing order (API routes before fallback)
+- **Verify:** `/api` routes are registered before `app.get('*', ...)`
+- **Solution:** Reorder Express routes
+
+### Changes to env variables not reflected
+- **Check:** Docker Compose environment section
+- **Solution:** `docker-compose restart backend` (no rebuild needed)
+
+### 404 on client-side routes (e.g., /dashboard)
+- **Check:** Backend has fallback route to `index.html`
+- **Verify:** `app.get('*', ...)` is the last route
+- **Solution:** Add fallback route after all API routes
+
+### env-config.js shows build-time values
+- **Check:** Backend is generating the file dynamically
+- **Verify:** Not serving static `env-config.js` from `dist/`
+- **Solution:** Add `/env-config.js` endpoint before static middleware
