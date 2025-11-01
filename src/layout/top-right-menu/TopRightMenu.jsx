@@ -7,7 +7,9 @@ import {
   Tooltip,
   Drawer,
   Text,
-  Modal
+  Modal,
+  Center,
+  Divider
 } from "@mantine/core"
 import {notifications} from "@mantine/notifications"
 
@@ -28,6 +30,7 @@ import {log_out} from "../../actions/userActions"
 import {useTranslation} from "react-i18next"
 import {BsGearWide, BsTranslate} from "react-icons/bs"
 import SystemPurpose from "../../screens/sys-purpose/SystemPurpose"
+import QrCode from "../../components/points-card/QrCode"
 
 // import {
 //   IconSettings,
@@ -110,40 +113,13 @@ const TopRightMenu = ({userInfo}) => {
         </Menu.Target>
 
         <Menu.Dropdown dir={t("Dir")}>
-          {/* <Menu.Label>Application</Menu.Label>
-        <Menu.Item
-          leftSection={
-            <IconSettings style={{width: rem(14), height: rem(14)}} />
-          }
-        >
-          Settings
-        </Menu.Item>
-        <Menu.Item
-          leftSection={
-            <IconMessageCircle style={{width: rem(14), height: rem(14)}} />
-          }
-        >
-          Messages
-        </Menu.Item>
-        <Menu.Item
-          leftSection={<IconPhoto style={{width: rem(14), height: rem(14)}} />}
-        >
-          Gallery
-        </Menu.Item>
-        <Menu.Item
-          leftSection={<IconSearch style={{width: rem(14), height: rem(14)}} />}
-          rightSection={
-            <Text size="xs" c="dimmed">
-              ⌘K
-            </Text>
-          }
-        >
-          Search
-        </Menu.Item>
+          {/* QR Code at the top */}
+          <Center py="md">
+            <QrCode qrCode={userInfo?.user?._id} />
+          </Center>
 
-        <Menu.Divider />
-*/}
-          {/* <Menu.Label>Danger zone</Menu.Label> */}
+          <Divider my="xs" />
+
           <Menu.Item
             leftSection={
               <FaImagePortrait style={{width: rem(14), height: rem(14)}} />

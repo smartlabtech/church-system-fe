@@ -53,7 +53,6 @@ import NotFound from "../pages/not-found/NotFound"
 import PrivacyPolicy from "../pages/privacy-policy/PrivacyPolicy "
 import AuthModal from "../pages/auth/AuthModal"
 import TopRightMenu from "./top-right-menu/TopRightMenu"
-import QrCode from "../components/points-card/QrCode"
 import AppInstallPopup from "../components/AppInstallPopup"
 import ServantInListModal from "../components/ServantInListModal"
 import {SET_SERVANTINMODAL} from "../constants/servantInConstants"
@@ -65,7 +64,7 @@ export function SimpleLayout() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
-  const {t} = useTranslation()
+  const {t, i18n} = useTranslation()
 
   const [mobileOpened, {toggle: toggleMobile, close: closeMobile}] =
     useDisclosure(false)
@@ -272,7 +271,7 @@ export function SimpleLayout() {
                       color: "var(--mantine-color-primary-6)"
                     }}
                   >
-                    <FaHome size={20} />
+                    <FaChurch size={20} />
                   </Box>
                   <Text size="sm" fw={600} c="primary.6" visibleFrom="sm">
                     {t("lang") === "ar" ? ENV.CHURCH_NAME_AR : ENV.CHURCH_NAME_EN}
@@ -309,6 +308,11 @@ export function SimpleLayout() {
                     </Group>
                   </UnstyledButton>
                 ))}
+
+                {/* Visual separator before role-based navigation */}
+                {(userInfo?.user?.authorizedKhadem || userInfo?.user?.role === "admin") && (
+                  <Divider orientation="vertical" h={30} />
+                )}
 
                 {/* Dashboard button for authorized servants */}
                 {userInfo?.user?.authorizedKhadem && (
@@ -364,45 +368,53 @@ export function SimpleLayout() {
                   </UnstyledButton>
                 )}
               </Group>
+            </Group>
 
+            {/* Right side - Service Selector, Language Toggle, User menu */}
+            <Group gap="md">
               {/* Service Selector for regular users (public pages) */}
               {!location.pathname.startsWith("/dashboard") &&
                 !location.pathname.startsWith("/admin-panel") &&
                 userInfo?.user?.servedBy?.length > 0 && (
-                  <>
-                    <Divider orientation="vertical" h={30} visibleFrom="sm" />
-                    <Button
-                      size="xs"
-                      variant="subtle"
-                      onClick={() => dispatch({type: SET_SERVEDBYMODAL})}
-                    >
-                      {service?.name || t("Select_Service")}
-                    </Button>
-                  </>
+                  <Button
+                    size="xs"
+                    variant="subtle"
+                    onClick={() => dispatch({type: SET_SERVEDBYMODAL})}
+                    visibleFrom="sm"
+                  >
+                    {service?.name || t("Select_Service")}
+                  </Button>
                 )}
 
               {/* Service Selector for servants (dashboard pages) */}
               {location.pathname.startsWith("/dashboard") && (
-                <>
-                  <Divider orientation="vertical" h={30} visibleFrom="sm" />
-                  <Button
-                    size="xs"
-                    variant="subtle"
-                    onClick={() => dispatch({type: SET_SERVANTINMODAL})}
-                  >
-                    {selected?.service?.name || t("Select_Service")}
-                  </Button>
-                </>
+                <Button
+                  size="xs"
+                  variant="subtle"
+                  onClick={() => dispatch({type: SET_SERVANTINMODAL})}
+                  visibleFrom="sm"
+                >
+                  {selected?.service?.name || t("Select_Service")}
+                </Button>
               )}
-            </Group>
 
-            {/* Right side - User menu */}
-            <Group gap="md">
+              {/* Language Toggle */}
+              {userInfo?.user && (
+                <Button
+                  size="xs"
+                  variant="light"
+                  onClick={() => {
+                    const newLang = i18n.language === "ar" ? "en" : "ar"
+                    i18n.changeLanguage(newLang)
+                  }}
+                  visibleFrom="sm"
+                >
+                  {t("lang") === "ar" ? "EN" : "ع"}
+                </Button>
+              )}
+
               {userInfo?.user ? (
-                <>
-                  <QrCode qrCode={userInfo?.user?._id} />
-                  <TopRightMenu userInfo={userInfo} />
-                </>
+                <TopRightMenu userInfo={userInfo} />
               ) : (
                 <Button onClick={openAuth} variant="filled" size="sm">
                   {t("Sign_In")}
