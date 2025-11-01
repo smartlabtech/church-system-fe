@@ -64,6 +64,11 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
   const [modalOpened, setModalOpened] = useState(false)
   const [editingMCQ, setEditingMCQ] = useState(null)
 
+  // Filter states
+  const [filterStatus, setFilterStatus] = useState('')
+  const [filterPoints, setFilterPoints] = useState('')
+  const [filterActiveDate, setFilterActiveDate] = useState(null)
+
   // Form state
   const [formData, setFormData] = useState({
     serviceId: '',
@@ -123,9 +128,18 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       if (selectedChapter) {
         queryParams.chapter = selectedChapter
       }
+      if (filterStatus !== '') {
+        queryParams.status = filterStatus === 'active'
+      }
+      if (filterPoints !== '') {
+        queryParams.points = Number(filterPoints)
+      }
+      if (filterActiveDate) {
+        queryParams.activeOn = filterActiveDate
+      }
       dispatch(listMCQs(queryParams))
     }
-  }, [dispatch, selectedService, selectedBook, selectedChapter])
+  }, [dispatch, selectedService, selectedBook, selectedChapter, filterStatus, filterPoints, filterActiveDate])
 
   // Handle success/error messages
   useEffect(() => {
@@ -211,28 +225,31 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
   }
 
   const handleSubmit = () => {
-    // Validate at least one correct answer
-    const hasCorrectAnswer = formData.choices.some(choice => choice.isTrue)
-    if (!hasCorrectAnswer) {
-      notifications.show({
-        title: t('Error'),
-        message: t('Please_select_at_least_one_correct_answer'),
-        color: 'red'
-      })
-      return
-    }
+    // Only validate choices when creating (not when updating)
+    if (!editingMCQ) {
+      // Validate at least one correct answer
+      const hasCorrectAnswer = formData.choices.some(choice => choice.isTrue)
+      if (!hasCorrectAnswer) {
+        notifications.show({
+          title: t('Error'),
+          message: t('Please_select_at_least_one_correct_answer'),
+          color: 'red'
+        })
+        return
+      }
 
-    // Validate all choices have text
-    const allChoicesValid = formData.choices.every(choice =>
-      choice.text.en.trim() || choice.text.ar.trim()
-    )
-    if (!allChoicesValid) {
-      notifications.show({
-        title: t('Error'),
-        message: t('Please_fill_all_choice_texts'),
-        color: 'red'
-      })
-      return
+      // Validate all choices have text
+      const allChoicesValid = formData.choices.every(choice =>
+        choice.text.en.trim() || choice.text.ar.trim()
+      )
+      if (!allChoicesValid) {
+        notifications.show({
+          title: t('Error'),
+          message: t('Please_fill_all_choice_texts'),
+          color: 'red'
+        })
+        return
+      }
     }
 
     const mcqData = {
@@ -242,8 +259,12 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       fromVerse: Number(formData.fromVerse) || 0,
       toVerse: Number(formData.toVerse) || 0,
       question: formData.question,
-      points: Number(formData.points) || 10,
-      choices: formData.choices.filter(choice =>
+      points: Number(formData.points) || 10
+    }
+
+    // Only include choices when creating (NOT when updating)
+    if (!editingMCQ) {
+      mcqData.choices = formData.choices.filter(choice =>
         choice.text.en.trim() || choice.text.ar.trim()
       )
     }
@@ -404,34 +425,58 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
     <Stack gap="sm">
       {/* Filters */}
       {selectedService && selectedBook && (
-        <Group justify="space-between" wrap="nowrap" gap="xs">
-          {chapters.length > 0 && (
+        <Stack gap="xs">
+          <Group gap="xs" wrap="wrap">
+            {chapters.length > 0 && (
+              <Select
+                placeholder={t('Filter_by_chapter')}
+                value={selectedChapter}
+                onChange={setSelectedChapter}
+                data={[
+                  { value: '', label: t('All_Chapters') },
+                  ...chapters.map(ch => ({
+                    value: ch.toString(),
+                    label: `${t('Chapter')} ${ch}`
+                  }))
+                ]}
+                leftSection={<FaListOl size={14} />}
+                clearable
+                size="xs"
+                style={{ flex: 1, minWidth: 120 }}
+              />
+            )}
             <Select
-              placeholder={t('Filter_by_chapter')}
-              value={selectedChapter}
-              onChange={setSelectedChapter}
+              placeholder={t('Status')}
+              value={filterStatus}
+              onChange={setFilterStatus}
               data={[
-                { value: '', label: t('All_Chapters') },
-                ...chapters.map(ch => ({
-                  value: ch.toString(),
-                  label: `Ch. ${ch}`
-                }))
+                { value: '', label: t('All') },
+                { value: 'active', label: t('Active') },
+                { value: 'inactive', label: t('Inactive') }
               ]}
-              leftSection={<FaListOl size={14} />}
               clearable
               size="xs"
-              style={{ flex: 1, minWidth: 0 }}
+              style={{ flex: 1, minWidth: 100 }}
             />
-          )}
-          <Button
-            leftSection={<FaPlus />}
-            onClick={() => handleOpenModal()}
-            variant="filled"
-            size="sm"
-          >
-            {t('Add_Question')}
-          </Button>
-        </Group>
+            <NumberInput
+              placeholder={t('Points')}
+              value={filterPoints}
+              onChange={setFilterPoints}
+              min={0}
+              clearable
+              size="xs"
+              style={{ flex: 1, minWidth: 80 }}
+            />
+            <Button
+              leftSection={<FaPlus />}
+              onClick={() => handleOpenModal()}
+              variant="filled"
+              size="sm"
+            >
+              {t('Add_Question')}
+            </Button>
+          </Group>
+        </Stack>
       )}
 
       {/* Questions List */}

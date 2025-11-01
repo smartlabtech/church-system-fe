@@ -338,5 +338,20 @@
     "Update_your_mobile_number_for_account_verification": "Update your mobile number for account verification",
     "Email_Address": "Email Address",
     "Update_your_email_for_notifications": "Update your email for notifications",
-    "Select_Service": "Select Service"
+    "Select_Service": "Select Service",
+    "Inactive": "Inactive",
+    "All": "All",
+    "Points": "Points",
+    "Edit_Choices": "Edit Choices",
+    "Choices_must_be_edited_separately": "Choices must be edited separately",
+    "Choice": "Choice",
+    "Correct_Answer": "Correct Answer",
+    "Add_Choice": "Add Choice",
+    "Save_Changes": "Save Changes",
+    "Status": "Status",
+    "All_Questions": "All Questions",
+    "Filter_by_points": "Filter by points",
+    "Active_On_Date": "Active On Date",
+    "Show_questions_active_on": "Show questions active on",
+    "Shows_questions_available_on_selected_date": "Shows questions available on selected date"
 }

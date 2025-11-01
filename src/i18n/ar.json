@@ -357,5 +357,20 @@
     "Update_your_mobile_number_for_account_verification": "قم بتحديث رقم موبايلك للتحقق من الحساب",
     "Email_Address": "عنوان البريد الإلكتروني",
     "Update_your_email_for_notifications": "قم بتحديث بريدك الإلكتروني لتلقي الإشعارات",
-    "Select_Service": "اختر الخدمة"
+    "Select_Service": "اختر الخدمة",
+    "Inactive": "غير نشط",
+    "All": "الكل",
+    "Points": "النقاط",
+    "Edit_Choices": "تعديل الاختيارات",
+    "Choices_must_be_edited_separately": "يجب تعديل الاختيارات بشكل منفصل",
+    "Choice": "اختيار",
+    "Correct_Answer": "الإجابة الصحيحة",
+    "Add_Choice": "إضافة اختيار",
+    "Save_Changes": "حفظ التغييرات",
+    "Status": "الحالة",
+    "All_Questions": "جميع الأسئلة",
+    "Filter_by_points": "تصفية حسب النقاط",
+    "Active_On_Date": "نشط في تاريخ",
+    "Show_questions_active_on": "إظهار الأسئلة النشطة في",
+    "Shows_questions_available_on_selected_date": "يعرض الأسئلة المتاحة في التاريخ المحدد"
 }
