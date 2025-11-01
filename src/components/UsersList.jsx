@@ -160,7 +160,7 @@ export const UsersList = ({classId, selectedService}) => {
   }
 
   return (
-    <Group justify="center">
+    <Stack gap="md" style={{ width: '100%' }}>
       <Modal
         opened={opened}
         onClose={close}
@@ -207,7 +207,7 @@ export const UsersList = ({classId, selectedService}) => {
           radius={"lg"}
           withBorder
           style={{direction: t("Dir")}}
-          miw={isSmallScreen ? "100%" : "25rem"}
+          w="100%"
           px={"xs"}
         >
           <Group style={{display: "flex"}}>
@@ -309,6 +309,6 @@ export const UsersList = ({classId, selectedService}) => {
         status={status}
         onHide={() => setStatus(false)}
       />
-    </Group>
+    </Stack>
   )
 }

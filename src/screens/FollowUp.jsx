@@ -64,6 +64,15 @@ function FollowUpScreen() {
       if (parsedServiceData) {
         setSelectedService(parsedServiceData)
         // setClassId(parsedServiceData?.classes[0]?._id || "")
+
+        // Automatically fetch users when page loads with default filter
+        const filter = {
+          serviceId: parsedServiceData._id,
+          requestType: "RESPONSE",
+          status: "IN_CHURCH",
+          ...buildFilters(filters)
+        }
+        dispatch(getUsers(filter))
       }
     }
   }, [dispatch, serviceData, userInfo, navigate, location])
@@ -75,6 +84,7 @@ function FollowUpScreen() {
         serviceId: selectedService._id,
         classId: id,
         requestType: "RESPONSE",
+        status: "IN_CHURCH",
         ...buildFilters(filters)
       }
       dispatch(getUsers(filter))
@@ -87,6 +97,7 @@ function FollowUpScreen() {
         serviceId: selectedService._id,
         classId,
         requestType: "RESPONSE",
+        status: "IN_CHURCH",
         assignedToId: userInfo.user._id,
         ...buildFilters(filters)
       }
@@ -101,6 +112,7 @@ function FollowUpScreen() {
         serviceId: selectedService._id,
         classId,
         requestType: "REPORT",
+        status: "IN_CHURCH",
         ...buildFilters(filters)
       }
       dispatch(getUsers(filter))
@@ -113,6 +125,7 @@ function FollowUpScreen() {
         serviceId: selectedService._id,
         classId,
         requestType: "REPORT",
+        status: "IN_CHURCH",
         ...buildFilters(filters)
       }
       dispatch(sendAttendanceReport(filter))
@@ -120,6 +133,9 @@ function FollowUpScreen() {
   }
 
   const buildFilters = (filters) => {
+    // Return empty object if filters is undefined or null
+    if (!filters) return {}
+
     const gender = []
     const birthdayIn = []
 
