@@ -23,6 +23,7 @@ import {
   Divider,
   Box
 } from "@mantine/core"
+import { useMediaQuery } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { useTranslation } from "react-i18next"
 import {
@@ -52,6 +53,7 @@ import ClassManagement from "./ClassManagement"
 const ServiceManagement = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
   // Generate weekdays array with translations
   const WEEKDAYS = [
@@ -250,7 +252,7 @@ const ServiceManagement = () => {
       <Stack gap="lg">
         {/* Header */}
         <Paper shadow="sm" radius="md" p="md" withBorder>
-          <Group justify="space-between">
+          <Group justify="space-between" wrap="wrap" gap="md">
             <div>
               <Title order={2} c="primary.6">
                 <Group gap="xs">
@@ -266,6 +268,7 @@ const ServiceManagement = () => {
               leftSection={<FaPlus />}
               onClick={() => handleOpenModal()}
               variant="filled"
+              fullWidth={isMobile}
             >
               {t("Add_Service")}
             </Button>
@@ -344,17 +347,17 @@ const ServiceManagement = () => {
             </Text>
           ) : (
             <ScrollArea>
-              <Table striped highlightOnHover>
+              <Table striped highlightOnHover style={{ minWidth: 800 }}>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>{t("Name")}</Table.Th>
-                    <Table.Th>{t("Day")}</Table.Th>
-                    <Table.Th>{t("Type")}</Table.Th>
-                    <Table.Th>{t("Attendance_Points")}</Table.Th>
-                    <Table.Th>{t("Bible_Study_Points")}</Table.Th>
-                    <Table.Th>{t("Money_to_Points")}</Table.Th>
-                    <Table.Th>{t("Send_Credentials")}</Table.Th>
-                    <Table.Th>{t("Actions")}</Table.Th>
+                    <Table.Th style={{ minWidth: 150 }}>{t("Name")}</Table.Th>
+                    <Table.Th style={{ minWidth: 100 }}>{t("Day")}</Table.Th>
+                    <Table.Th style={{ minWidth: 100 }}>{t("Type")}</Table.Th>
+                    <Table.Th style={{ minWidth: 120 }}>{t("Attendance_Points")}</Table.Th>
+                    <Table.Th style={{ minWidth: 120 }}>{t("Bible_Study_Points")}</Table.Th>
+                    <Table.Th style={{ minWidth: 120 }}>{t("Money_to_Points")}</Table.Th>
+                    <Table.Th style={{ minWidth: 120 }}>{t("Send_Credentials")}</Table.Th>
+                    <Table.Th style={{ minWidth: 80 }}>{t("Actions")}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -447,6 +450,7 @@ const ServiceManagement = () => {
             </Title>
           }
           size="md"
+          fullScreen={isMobile}
         >
           <Stack gap="md">
             <TextInput

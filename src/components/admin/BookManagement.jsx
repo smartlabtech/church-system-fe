@@ -21,6 +21,7 @@ import {
   Select,
   Grid
 } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import {
@@ -47,6 +48,7 @@ const BookManagement = () => {
   const dispatch = useDispatch()
   const { t, i18n } = useTranslation()
   const currentLang = i18n.language
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
   const [modalOpened, setModalOpened] = useState(false)
   const [editingBook, setEditingBook] = useState(null)
@@ -185,7 +187,7 @@ const BookManagement = () => {
       <Stack gap="lg">
         {/* Header */}
         <Paper shadow="sm" radius="md" p="md" withBorder>
-          <Group justify="space-between">
+          <Group justify="space-between" wrap="wrap" gap="md">
             <div>
               <Title order={2} c="primary.6">
                 <Group gap="xs">
@@ -201,6 +203,7 @@ const BookManagement = () => {
               leftSection={<FaPlus />}
               onClick={() => handleOpenModal()}
               variant="filled"
+              fullWidth={isMobile}
             >
               {t('Add_Book')}
             </Button>
@@ -209,7 +212,7 @@ const BookManagement = () => {
 
         {/* Sort Controls */}
         <Paper shadow="sm" radius="md" p="md" withBorder>
-          <Group>
+          <Group wrap="wrap" gap="md">
             <Text fw={600}>{t('Sort_by')}:</Text>
             <Button
               variant="light"
@@ -219,6 +222,7 @@ const BookManagement = () => {
                   : <FaSortAlphaUp />
               }
               onClick={handleSort}
+              fullWidth={isMobile}
             >
               {t('Name')} ({sortConfig.sortType === SORT_TYPE.ASCENDING ? t('A-Z') : t('Z-A')})
             </Button>
@@ -241,15 +245,15 @@ const BookManagement = () => {
             </Text>
           ) : (
             <ScrollArea>
-              <Table striped highlightOnHover>
+              <Table striped highlightOnHover style={{ minWidth: 700 }}>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>{t('Name')} ({t('Arabic')})</Table.Th>
-                    <Table.Th>{t('Name')} ({t('English')})</Table.Th>
-                    <Table.Th>{t('Chapters')}</Table.Th>
-                    <Table.Th>{t('Created_Date')}</Table.Th>
-                    <Table.Th>{t('Last_Modified')}</Table.Th>
-                    <Table.Th>{t('Actions')}</Table.Th>
+                    <Table.Th style={{ minWidth: 150 }}>{t('Name')} ({t('Arabic')})</Table.Th>
+                    <Table.Th style={{ minWidth: 150 }}>{t('Name')} ({t('English')})</Table.Th>
+                    <Table.Th style={{ minWidth: 100 }}>{t('Chapters')}</Table.Th>
+                    <Table.Th style={{ minWidth: 120 }}>{t('Created_Date')}</Table.Th>
+                    <Table.Th style={{ minWidth: 120 }}>{t('Last_Modified')}</Table.Th>
+                    <Table.Th style={{ minWidth: 80 }}>{t('Actions')}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -307,10 +311,11 @@ const BookManagement = () => {
             </Title>
           }
           size="md"
+          fullScreen={isMobile}
         >
           <Stack gap="md">
             <Grid gutter="md">
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, sm: 6 }}>
                 <TextInput
                   label={t('Name_Arabic')}
                   placeholder={t('Enter_arabic_name')}
@@ -322,7 +327,7 @@ const BookManagement = () => {
                   })}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, sm: 6 }}>
                 <TextInput
                   label={t('Name_English')}
                   placeholder={t('Enter_english_name')}
