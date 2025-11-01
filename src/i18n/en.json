@@ -400,5 +400,16 @@
     "Edit_Group_Dates": "Edit Group Dates",
     "questions_in_this_group": "questions in this group",
     "Group_dates_updated_successfully": "Group dates updated successfully",
-    "Failed_to_update_questions": "Failed to update questions"
+    "Failed_to_update_questions": "Failed to update questions",
+    "Points_Store": "Points Store",
+    "Redeem_your_points_for_valuable_rewards": "Redeem your points for valuable rewards",
+    "Your_Balance": "Your Balance",
+    "point": "point",
+    "Order_Now": "Order Now",
+    "Not_Enough_Points": "Not Enough Points",
+    "You_need_more_points": "You need {count} more points",
+    "Order_Successful": "Order Successful",
+    "We_will_contact_you_soon": "We will contact you soon",
+    "No_Products_Available": "No Products Available",
+    "New_products_coming_soon": "New products will be added soon"
 }

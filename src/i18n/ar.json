@@ -419,5 +419,16 @@
     "Edit_Group_Dates": "تعديل تواريخ المجموعة",
     "questions_in_this_group": "الأسئلة في هذه المجموعة",
     "Group_dates_updated_successfully": "تم تحديث تواريخ المجموعة بنجاح",
-    "Failed_to_update_questions": "فشل في تحديث الأسئلة"
+    "Failed_to_update_questions": "فشل في تحديث الأسئلة",
+    "Points_Store": "متجر النقاط",
+    "Redeem_your_points_for_valuable_rewards": "استبدل نقاطك بجوائز قيمة",
+    "Your_Balance": "رصيدك",
+    "point": "نقطة",
+    "Order_Now": "اطلب الآن",
+    "Not_Enough_Points": "نقاطك غير كافية",
+    "You_need_more_points": "تحتاج {count} نقطة إضافية",
+    "Order_Successful": "تم الطلب بنجاح",
+    "We_will_contact_you_soon": "سيتم التواصل معك قريباً",
+    "No_Products_Available": "لا توجد منتجات متاحة",
+    "New_products_coming_soon": "سيتم إضافة منتجات جديدة قريباً"
 }

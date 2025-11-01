@@ -64,12 +64,12 @@ const StoreScreen = () => {
 
       <Stack gap="sm" mt="md">
         <Text size="sm" fw={600} lineClamp={2}>
-          {item?.title?.ar || item?.title?.en || "Product"}
+          {t("lang") === "ar" ? (item?.title?.ar || item?.title?.en || "Product") : (item?.title?.en || item?.title?.ar || "Product")}
         </Text>
 
         <Group justify="space-between" align="center">
           <Badge size="lg" color="secondary" variant="light" leftSection="🏆">
-            {item.points} pts
+            {item.points} {t("Points")}
           </Badge>
 
           <Button
@@ -83,22 +83,22 @@ const StoreScreen = () => {
                 notifications.show({
                   id: "not-enough",
                   color: "red",
-                  title: "نقاطك غير كافية",
-                  message: `تحتاج ${item.points - userPoints} نقطة إضافية`,
+                  title: t("Not_Enough_Points"),
+                  message: t("You_need_more_points").replace("{count}", item.points - userPoints),
                   autoClose: 4000
                 })
               } else {
                 notifications.show({
                   id: "order-success",
                   color: "green",
-                  title: "تم الطلب بنجاح",
-                  message: "سيتم التواصل معك قريباً",
+                  title: t("Order_Successful"),
+                  message: t("We_will_contact_you_soon"),
                   autoClose: 3000
                 })
               }
             }}
           >
-            اطلب الآن
+            {t("Order_Now")}
           </Button>
         </Group>
       </Stack>
@@ -121,15 +121,15 @@ const StoreScreen = () => {
           <Group justify="space-between">
             <div>
               <Title order={2} c="primary.6">
-                متجر النقاط
+                {t("Points_Store")}
               </Title>
               <Text size="sm" c="dimmed" mt="xs">
-                استبدل نقاطك بجوائز قيمة
+                {t("Redeem_your_points_for_valuable_rewards")}
               </Text>
             </div>
             {storeData?.userPoints !== undefined && (
               <Badge size="xl" color="secondary" variant="filled">
-                رصيدك: {storeData.userPoints} نقطة
+                {t("Your_Balance")}: {storeData.userPoints} {t("point")}
               </Badge>
             )}
           </Group>
@@ -149,9 +149,9 @@ const StoreScreen = () => {
           <Paper shadow="sm" radius="md" p="xl" withBorder ta="center">
             <Stack align="center" gap="md">
               <Badge size="xl" color="gray" variant="light">
-                لا توجد منتجات متاحة
+                {t("No_Products_Available")}
               </Badge>
-              <Text c="dimmed">سيتم إضافة منتجات جديدة قريباً</Text>
+              <Text c="dimmed">{t("New_products_coming_soon")}</Text>
             </Stack>
           </Paper>
         )}
