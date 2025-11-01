@@ -293,17 +293,27 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       const startDate = formData.startDate instanceof Date
         ? formData.startDate
         : new Date(formData.startDate)
-      // Set to start of day (00:00:00.000)
-      startDate.setHours(0, 0, 0, 0)
-      mcqData.startDate = startDate.toISOString()
+      // Create UTC date at start of day (00:00:00.000 UTC)
+      const utcStartDate = new Date(Date.UTC(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate(),
+        0, 0, 0, 0
+      ))
+      mcqData.startDate = utcStartDate.toISOString()
     }
     if (formData.endDate) {
       const endDate = formData.endDate instanceof Date
         ? formData.endDate
         : new Date(formData.endDate)
-      // Set to end of day (23:59:59.999)
-      endDate.setHours(23, 59, 59, 999)
-      mcqData.endDate = endDate.toISOString()
+      // Create UTC date at end of day (23:59:59.999 UTC)
+      const utcEndDate = new Date(Date.UTC(
+        endDate.getFullYear(),
+        endDate.getMonth(),
+        endDate.getDate(),
+        23, 59, 59, 999
+      ))
+      mcqData.endDate = utcEndDate.toISOString()
     }
 
     if (editingMCQ) {
@@ -419,10 +429,29 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                       width: '250px',
                       height: '95px',
                       display: 'flex',
-                      flexDirection: 'column'
+                      flexDirection: 'column',
+                      position: 'relative'
                     }}
                     onClick={() => onSelectQuestion && onSelectQuestion(mcq._id)}
                   >
+                    <ActionIcon
+                      variant="light"
+                      color="blue"
+                      size="xs"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleOpenModal(mcq)
+                      }}
+                      title={t('Edit_Question')}
+                      style={{
+                        position: 'absolute',
+                        top: '4px',
+                        right: '4px',
+                        zIndex: 1
+                      }}
+                    >
+                      <FaEdit size={10} />
+                    </ActionIcon>
                     <Stack gap={4} style={{ height: '100%', justifyContent: 'space-between' }}>
                       <Box>
                         <Text size="xs" fw={600} lineClamp={2} c={isSelected ? 'blue.7' : undefined}>
