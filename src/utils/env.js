@@ -26,6 +26,8 @@ const getEnvVar = (key, defaultValue = '') => {
 export const ENV = {
   API_BASE_URL: getEnvVar('VITE_API_BASE_URL', '/api/ar'),
   API_CHURCH_ID: getEnvVar('VITE_API_CHURCH_ID', '63cd11f4808cc1923ca5f3ca'),
+  CHURCH_NAME_AR: getEnvVar('VITE_CHURCH_NAME_AR', 'كنيسة القديس مارمرقس'),
+  CHURCH_NAME_EN: getEnvVar('VITE_CHURCH_NAME_EN', 'Saint Mark Church - Maadi'),
 };
 
 // For debugging - log which environment variables are being used
@@ -34,6 +36,8 @@ if (import.meta.env.DEV) {
     source: window._env_ ? 'Runtime (Docker)' : 'Build-time',
     API_BASE_URL: ENV.API_BASE_URL,
     API_CHURCH_ID: ENV.API_CHURCH_ID,
+    CHURCH_NAME_AR: ENV.CHURCH_NAME_AR,
+    CHURCH_NAME_EN: ENV.CHURCH_NAME_EN,
   });
 }
 

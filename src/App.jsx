@@ -16,6 +16,9 @@ import {SimpleLayout} from "./layout/SimpleLayout"
 // Import modern theme configuration
 import { mantineThemeConfig } from './utils/theme/churchTheme'
 
+// Import environment configuration
+import {ENV} from './utils/env'
+
 // Create modern theme
 const modernTheme = createTheme(mantineThemeConfig)
 
@@ -27,6 +30,9 @@ function AppContent() {
     // Set document direction based on language
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr'
     document.documentElement.lang = i18n.language
+
+    // Set document title based on language
+    document.title = isRTL ? ENV.CHURCH_NAME_AR : ENV.CHURCH_NAME_EN
   }, [i18n.language, isRTL])
 
   return (
