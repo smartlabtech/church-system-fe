@@ -713,6 +713,7 @@ export function SimpleLayout() {
             <Routes>
               <Route path="/" element={<HomeScreen />} />
               <Route path="/store" element={<StoreScreen />} />
+              <Route path="/my-profile" element={<AccountScreen />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

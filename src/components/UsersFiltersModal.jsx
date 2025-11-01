@@ -12,11 +12,14 @@ import {
   Stack,
   Text
 } from "@mantine/core"
+import {useMediaQuery} from "@mantine/hooks"
 import {FaFilter} from "react-icons/fa"
 
 function UsersFiltersModal({searchHandler, classId}) {
   const dispatch = useDispatch()
   const [t, i18n] = useTranslation()
+  const isMobile = useMediaQuery('(max-width: 768px)')
+  const isSmallScreen = useMediaQuery('(max-width: 480px)')
 
   const [show, setShow] = useState(false)
 
@@ -109,9 +112,16 @@ function UsersFiltersModal({searchHandler, classId}) {
   return (
     <>
       <FaFilter onClick={() => setShow(true)} />
-      <Modal opened={show} onClose={() => setShow(false)}>
-        <Modal.Body style={{direction: t("Dir")}}>
-          <Stack>
+      <Modal
+        opened={show}
+        onClose={() => setShow(false)}
+        size="lg"
+        fullScreen={isMobile}
+        title={t("Filter_Options")}
+        centered
+      >
+        <Modal.Body style={{direction: t("Dir"), padding: "1rem"}}>
+          <Stack gap="md">
             <Group justify="center">
               <Button
                 variant={filters?.male ? "gradient" : "outline"}
@@ -129,8 +139,8 @@ function UsersFiltersModal({searchHandler, classId}) {
             <Divider />
 
             <Stack align="center">
-              <Text>{t("His_Birthday_In")}</Text>
-              <SimpleGrid cols={{base: 6, xs: 12, xl: 12}}>
+              <Text fw={500}>{t("His_Birthday_In")}</Text>
+              <SimpleGrid cols={{base: 3, xs: 4, sm: 6, md: 12}} spacing="xs" w="100%">
                 {filters?.birthdayMonthes?.map((month, index) => (
                   <Button
                     m={0}
@@ -148,8 +158,8 @@ function UsersFiltersModal({searchHandler, classId}) {
             <Divider />
 
             <Stack align="center">
-              <Text>{t(`Last_Attendance_From_X_Weeks`)}</Text>
-              <SimpleGrid cols={{base: 6, xs: 12, xl: 12}}>
+              <Text fw={500}>{t(`Last_Attendance_From_X_Weeks`)}</Text>
+              <SimpleGrid cols={{base: 3, xs: 3, sm: 6}} spacing="xs" w="100%">
                 {Array(6)
                   .fill(0)
                   .map((val, index) => (
@@ -172,8 +182,8 @@ function UsersFiltersModal({searchHandler, classId}) {
             <Divider />
 
             <Stack align="center">
-              <Text>{t(`Last_Followup_From_X_Monthes`)}</Text>
-              <SimpleGrid cols={{base: 6, xs: 12, xl: 12}}>
+              <Text fw={500}>{t(`Last_Followup_From_X_Monthes`)}</Text>
+              <SimpleGrid cols={{base: 3, xs: 3, sm: 6}} spacing="xs" w="100%">
                 {Array(6)
                   .fill(0)
                   .map((val, index) => (
@@ -196,8 +206,8 @@ function UsersFiltersModal({searchHandler, classId}) {
             <Divider />
 
             <Stack align="center">
-              <Text>{t("Avalability")}</Text>
-              <SimpleGrid cols={{base: 2, xs: 12, xl: 12}} style={{gap: "6px"}}>
+              <Text fw={500}>{t("Avalability")}</Text>
+              <SimpleGrid cols={{base: 1, xs: 2, sm: 3, md: 5}} spacing="xs" w="100%">
                 {[
                   "IN_CHURCH",
                   "OTHER_CHURCH",
@@ -206,13 +216,16 @@ function UsersFiltersModal({searchHandler, classId}) {
                   "WRONG_DATA"
                 ].map((val, index) => (
                   <Button
-                    m={0}
-                    p={6}
                     key={index}
                     size="sm"
-                    fz={"xs"}
                     variant={filters?.status == val ? "gradient" : "outline"}
                     onClick={() => updateStatus(val)}
+                    styles={{
+                      root: {
+                        fontSize: '0.75rem',
+                        padding: '0.5rem'
+                      }
+                    }}
                   >
                     {t(val)}
                   </Button>
@@ -221,11 +234,21 @@ function UsersFiltersModal({searchHandler, classId}) {
             </Stack>
             <Divider />
 
-            <Group justify="center">
-              <Button onClick={() => setFilter()} variant="filled">
+            <Group justify="center" gap="md" mt="md">
+              <Button
+                onClick={() => setFilter()}
+                variant="filled"
+                fullWidth={isSmallScreen}
+                flex={isSmallScreen ? undefined : 1}
+              >
                 {t("Set_Filter")}
               </Button>
-              <Button onClick={() => clearFilter()} variant="light">
+              <Button
+                onClick={() => clearFilter()}
+                variant="light"
+                fullWidth={isSmallScreen}
+                flex={isSmallScreen ? undefined : 1}
+              >
                 {t("Clear_Filter")}
               </Button>
             </Group>
