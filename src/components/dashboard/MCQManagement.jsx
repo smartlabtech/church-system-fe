@@ -64,6 +64,13 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
   const [modalOpened, setModalOpened] = useState(false)
   const [editingMCQ, setEditingMCQ] = useState(null)
   const [hasLoadedInitially, setHasLoadedInitially] = useState(false)
+  const [bulkEditModalOpened, setBulkEditModalOpened] = useState(false)
+  const [bulkEditChapter, setBulkEditChapter] = useState(null)
+  const [bulkEditDates, setBulkEditDates] = useState({
+    startDate: null,
+    endDate: null
+  })
+  const [bulkEditLoading, setBulkEditLoading] = useState(false)
 
   // Filter states
   const [filterStatus, setFilterStatus] = useState('')
@@ -345,6 +352,83 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
     setFormData({ ...formData, choices: newChoices })
   }
 
+  const handleOpenBulkEditModal = (groupKey) => {
+    setBulkEditChapter(groupKey)
+    setBulkEditDates({ startDate: null, endDate: null })
+    setBulkEditModalOpened(true)
+  }
+
+  const handleBulkEditSubmit = async () => {
+    if (!bulkEditChapter || (!bulkEditDates.startDate && !bulkEditDates.endDate)) {
+      notifications.show({
+        title: t('Error'),
+        message: t('Please_select_at_least_one_date'),
+        color: 'red'
+      })
+      return
+    }
+
+    setBulkEditLoading(true)
+
+    const group = groupedMCQs[bulkEditChapter]
+    const questionsInGroup = group.questions
+
+    try {
+      // Update each question in the group
+      for (let i = 0; i < questionsInGroup.length; i++) {
+        const mcq = questionsInGroup[i]
+        const updateData = {
+          serviceId: mcq.serviceId || selectedService,
+          chapter: mcq.chapter,
+          fromVerse: mcq.fromVerse,
+          toVerse: mcq.toVerse,
+          question: mcq.question,
+          points: mcq.points
+        }
+
+        // Add dates if provided
+        if (bulkEditDates.startDate) {
+          const startDate = new Date(bulkEditDates.startDate)
+          const utcStartDate = new Date(Date.UTC(
+            startDate.getFullYear(),
+            startDate.getMonth(),
+            startDate.getDate(),
+            0, 0, 0, 0
+          ))
+          updateData.startDate = utcStartDate.toISOString()
+        }
+
+        if (bulkEditDates.endDate) {
+          const endDate = new Date(bulkEditDates.endDate)
+          const utcEndDate = new Date(Date.UTC(
+            endDate.getFullYear(),
+            endDate.getMonth(),
+            endDate.getDate(),
+            23, 59, 59, 999
+          ))
+          updateData.endDate = utcEndDate.toISOString()
+        }
+
+        await dispatch(updateMCQ(mcq._id, updateData))
+      }
+
+      setBulkEditModalOpened(false)
+      setBulkEditLoading(false)
+      notifications.show({
+        title: t('Success'),
+        message: t('Group_dates_updated_successfully'),
+        color: 'green'
+      })
+    } catch (error) {
+      setBulkEditLoading(false)
+      notifications.show({
+        title: t('Error'),
+        message: t('Failed_to_update_questions'),
+        color: 'red'
+      })
+    }
+  }
+
   // Get book name
   const getBookName = (book) => {
     if (!book) return '-'
@@ -360,24 +444,67 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
     return '-'
   }
 
+  // Check if question is active today
+  const isQuestionActiveToday = (mcq) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Start of today
+
+    if (!mcq.startDate && !mcq.endDate) {
+      return false // No dates set, not specifically active today
+    }
+
+    const startDate = mcq.startDate ? new Date(mcq.startDate) : null
+    const endDate = mcq.endDate ? new Date(mcq.endDate) : null
+
+    if (startDate && endDate) {
+      // Both dates set - check if today is between them
+      return today >= new Date(startDate.setHours(0, 0, 0, 0)) &&
+             today <= new Date(endDate.setHours(0, 0, 0, 0))
+    } else if (startDate) {
+      // Only start date - check if today is on or after start
+      return today >= new Date(startDate.setHours(0, 0, 0, 0))
+    } else if (endDate) {
+      // Only end date - check if today is on or before end
+      return today <= new Date(endDate.setHours(0, 0, 0, 0))
+    }
+
+    return false
+  }
+
   // Ensure mcqs is always an array
   const mcqsList = Array.isArray(mcqs) ? mcqs : []
 
-  // Get unique chapters from MCQs
+  // Get unique chapters for filter dropdown
   const chapters = [...new Set(mcqsList.map(mcq => mcq.chapter))].sort((a, b) => a - b)
 
-  // Group MCQs by chapter
+  // Group MCQs by chapter, fromVerse, and toVerse
   const groupedMCQs = mcqsList.reduce((groups, mcq) => {
     const chapter = mcq.chapter || 0
-    if (!groups[chapter]) {
-      groups[chapter] = []
+    const fromVerse = mcq.fromVerse || 0
+    const toVerse = mcq.toVerse || 0
+    const groupKey = `${chapter}-${fromVerse}-${toVerse}`
+
+    if (!groups[groupKey]) {
+      groups[groupKey] = {
+        chapter,
+        fromVerse,
+        toVerse,
+        questions: []
+      }
     }
-    groups[chapter].push(mcq)
+    groups[groupKey].questions.push(mcq)
     return groups
   }, {})
 
-  // Sort chapters
-  const sortedChapters = Object.keys(groupedMCQs).sort((a, b) => Number(a) - Number(b))
+  // Sort groups by chapter, then fromVerse, then toVerse
+  const sortedGroupKeys = Object.keys(groupedMCQs).sort((a, b) => {
+    const [chapterA, fromA, toA] = a.split('-').map(Number)
+    const [chapterB, fromB, toB] = b.split('-').map(Number)
+
+    if (chapterA !== chapterB) return chapterA - chapterB
+    if (fromA !== fromB) return fromA - fromB
+    return toA - toB
+  })
 
   // Render horizontal mode for mobile
   if (horizontal) {
@@ -394,18 +521,20 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       return <Text size="xs" c="dimmed">{t('No_questions_found_for_this_book')}</Text>
     }
 
-    // Render questions horizontally grouped by chapter
+    // Render questions horizontally grouped by chapter and verses
     return (
       <Group gap="md" wrap="nowrap" style={{ minWidth: 'max-content' }}>
-        {sortedChapters.map((chapter) => (
-          <Box key={chapter} style={{ display: 'inline-block' }}>
-            <Stack gap="xs" style={{ marginBottom: '8px' }}>
-              <Badge color="blue" variant="filled" size="sm">
-                {t('Chapter')} {chapter}
-              </Badge>
-            </Stack>
-            <Group gap="xs" wrap="nowrap">
-              {groupedMCQs[chapter].map((mcq) => {
+        {sortedGroupKeys.map((groupKey) => {
+          const group = groupedMCQs[groupKey]
+          return (
+            <Box key={groupKey} style={{ display: 'inline-block' }}>
+              <Stack gap="xs" style={{ marginBottom: '8px' }}>
+                <Badge color="blue" variant="filled" size="sm">
+                  {t('Chapter')} {group.chapter} {group.fromVerse && `(${group.fromVerse}-${group.toVerse})`}
+                </Badge>
+              </Stack>
+              <Group gap="xs" wrap="nowrap">
+                {group.questions.map((mcq) => {
                 const correctAnswer = mcq.choices?.find(c => c.check === true || c.isTrue === true)
                 const correctAnswerText = correctAnswer
                   ? (currentLang === 'ar'
@@ -467,9 +596,9 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                         )}
                       </Box>
                       <Group gap="xs">
-                        {mcq.fromVerse && (
-                          <Badge size="xs" color="gray" variant="light">
-                            v.{mcq.fromVerse}-{mcq.toVerse}
+                        {isQuestionActiveToday(mcq) && (
+                          <Badge size="xs" color="green" variant="filled">
+                            ⭐ {t('Today')}
                           </Badge>
                         )}
                         <Badge size="xs" color="teal" variant="filled">
@@ -478,11 +607,12 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                       </Group>
                     </Stack>
                   </Card>
-                )
-              })}
-            </Group>
-          </Box>
-        ))}
+                  )
+                })}
+              </Group>
+            </Box>
+          )
+        })}
       </Group>
     )
   }
@@ -612,20 +742,32 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
           </Stack>
         </Card>
       ) : (
-        // Admin View - Grouped by chapter
+        // Admin View - Grouped by chapter, fromVerse, toVerse
         <Stack gap="md">
-          {sortedChapters.map((chapter) => (
-            <Stack gap="xs" key={chapter}>
-              <Group gap="xs" align="center">
-                <Badge color="blue" variant="filled" size="sm">
-                  {t('Chapter')} {chapter}
-                </Badge>
-                <Text size="xs" c="dimmed">
-                  ({groupedMCQs[chapter].length} {t('questions')})
-                </Text>
-              </Group>
-              <Stack gap="xs">
-                {groupedMCQs[chapter].map((mcq) => {
+          {sortedGroupKeys.map((groupKey) => {
+            const group = groupedMCQs[groupKey]
+            return (
+              <Stack gap="xs" key={groupKey}>
+                <Group gap="xs" align="center" justify="space-between">
+                  <Group gap="xs">
+                    <Badge color="blue" variant="filled" size="sm">
+                      {t('Chapter')} {group.chapter} {group.fromVerse && `(v.${group.fromVerse}-${group.toVerse})`}
+                    </Badge>
+                    <Text size="xs" c="dimmed">
+                      ({group.questions.length} {t('questions')})
+                    </Text>
+                  </Group>
+                  <Button
+                    size="xs"
+                    variant="light"
+                    onClick={() => handleOpenBulkEditModal(groupKey)}
+                    leftSection={<FaEdit size={12} />}
+                  >
+                    {t('Edit_Group_Dates')}
+                  </Button>
+                </Group>
+                <Stack gap="xs">
+                  {group.questions.map((mcq) => {
                   // Find correct answer - API uses 'check' property and 'choice' for text
                   const correctAnswer = mcq.choices?.find(c => c.check === true || c.isTrue === true)
                   const correctAnswerText = correctAnswer
@@ -665,9 +807,9 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                             </Group>
                           )}
                           <Group gap="xs">
-                            {mcq.fromVerse && (
-                              <Badge size="xs" color="gray" variant="light">
-                                v.{mcq.fromVerse}-{mcq.toVerse}
+                            {isQuestionActiveToday(mcq) && (
+                              <Badge size="xs" color="green" variant="filled">
+                                ⭐ {t('Today')}
                               </Badge>
                             )}
                             <Badge size="xs" color="teal" variant="filled">
@@ -694,11 +836,12 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                         </ActionIcon>
                       </Group>
                     </Card>
-                  )
-                })}
+                    )
+                  })}
+                </Stack>
               </Stack>
-            </Stack>
-          ))}
+            )
+          })}
         </Stack>
       )}
 
@@ -883,6 +1026,93 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
               }
             >
               {editingMCQ ? t('Update') : t('Create')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Bulk Edit Modal for Chapter Dates */}
+      <Modal
+        opened={bulkEditModalOpened}
+        onClose={() => setBulkEditModalOpened(false)}
+        title={
+          <Group gap="xs">
+            <FaEdit />
+            <Text fw={600}>
+              {t('Edit_Group_Dates')} - {bulkEditChapter && groupedMCQs[bulkEditChapter] && (
+                <>
+                  {t('Chapter')} {groupedMCQs[bulkEditChapter].chapter}
+                  {groupedMCQs[bulkEditChapter].fromVerse && ` (v.${groupedMCQs[bulkEditChapter].fromVerse}-${groupedMCQs[bulkEditChapter].toVerse})`}
+                </>
+              )}
+            </Text>
+          </Group>
+        }
+        size="md"
+      >
+        <Stack gap="md">
+          <Alert color="blue" p="xs">
+            <Text size="xs">
+              {t('This_will_update_dates_for_all')} {groupedMCQs[bulkEditChapter]?.questions.length || 0} {t('questions_in_this_group')}
+            </Text>
+          </Alert>
+
+          <DateInput
+            label={t('Start_Date')}
+            placeholder={t('Select_start_date')}
+            value={bulkEditDates.startDate}
+            onChange={(value) => setBulkEditDates({ ...bulkEditDates, startDate: value })}
+            valueFormat="DD MMM YYYY"
+            description={t('Leave_empty_to_keep_current_dates')}
+            dateParser={(input) => {
+              const parts = input.split('/')
+              if (parts.length === 3) {
+                const day = parseInt(parts[0], 10)
+                const month = parseInt(parts[1], 10) - 1
+                const year = parseInt(parts[2], 10)
+                return new Date(year, month, day)
+              }
+              return null
+            }}
+            clearable
+          />
+
+          <DateInput
+            label={t('End_Date')}
+            placeholder={t('Select_end_date')}
+            value={bulkEditDates.endDate}
+            onChange={(value) => setBulkEditDates({ ...bulkEditDates, endDate: value })}
+            valueFormat="DD MMM YYYY"
+            description={t('Leave_empty_to_keep_current_dates')}
+            dateParser={(input) => {
+              const parts = input.split('/')
+              if (parts.length === 3) {
+                const day = parseInt(parts[0], 10)
+                const month = parseInt(parts[1], 10) - 1
+                const year = parseInt(parts[2], 10)
+                return new Date(year, month, day)
+              }
+              return null
+            }}
+            clearable
+          />
+
+          <Divider />
+
+          <Group justify="flex-end">
+            <Button
+              variant="default"
+              onClick={() => setBulkEditModalOpened(false)}
+              disabled={bulkEditLoading}
+            >
+              {t('Cancel')}
+            </Button>
+            <Button
+              onClick={handleBulkEditSubmit}
+              disabled={(!bulkEditDates.startDate && !bulkEditDates.endDate) || bulkEditLoading}
+              loading={bulkEditLoading}
+            >
+              {t('Update_All_Questions')}
             </Button>
           </Group>
         </Stack>

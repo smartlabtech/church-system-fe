@@ -407,5 +407,17 @@
     "Question_active_until_this_date": "السؤال نشط حتى هذا التاريخ",
     "Please_select_a_service_from_the_header_above": "الرجاء اختيار خدمة من الأعلى",
     "Click_on_the_service_selector_in_the_page_header": "انقر على محدد الخدمة في رأس الصفحة",
-    "Please_fill_all_choice_texts": "الرجاء ملء جميع نصوص الاختيارات"
+    "Please_fill_all_choice_texts": "الرجاء ملء جميع نصوص الاختيارات",
+    "Edit_Chapter_Dates": "تعديل تواريخ الإصحاح",
+    "This_will_update_dates_for_all": "سيتم تحديث التواريخ لجميع",
+    "questions_in_this_chapter": "الأسئلة في هذا الإصحاح",
+    "Leave_empty_to_keep_current_dates": "اترك فارغاً للاحتفاظ بالتواريخ الحالية",
+    "Update_All_Questions": "تحديث جميع الأسئلة",
+    "Please_select_at_least_one_date": "الرجاء اختيار تاريخ واحد على الأقل",
+    "Chapter_dates_updated_successfully": "تم تحديث تواريخ الإصحاح بنجاح",
+    "Today": "اليوم",
+    "Edit_Group_Dates": "تعديل تواريخ المجموعة",
+    "questions_in_this_group": "الأسئلة في هذه المجموعة",
+    "Group_dates_updated_successfully": "تم تحديث تواريخ المجموعة بنجاح",
+    "Failed_to_update_questions": "فشل في تحديث الأسئلة"
 }

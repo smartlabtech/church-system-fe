@@ -388,5 +388,17 @@
     "Question_active_until_this_date": "Question active until this date",
     "Please_select_a_service_from_the_header_above": "Please select a service from the header above",
     "Click_on_the_service_selector_in_the_page_header": "Click on the service selector in the page header",
-    "Please_fill_all_choice_texts": "Please fill all choice texts"
+    "Please_fill_all_choice_texts": "Please fill all choice texts",
+    "Edit_Chapter_Dates": "Edit Chapter Dates",
+    "This_will_update_dates_for_all": "This will update dates for all",
+    "questions_in_this_chapter": "questions in this chapter",
+    "Leave_empty_to_keep_current_dates": "Leave empty to keep current dates",
+    "Update_All_Questions": "Update All Questions",
+    "Please_select_at_least_one_date": "Please select at least one date",
+    "Chapter_dates_updated_successfully": "Chapter dates updated successfully",
+    "Today": "Today",
+    "Edit_Group_Dates": "Edit Group Dates",
+    "questions_in_this_group": "questions in this group",
+    "Group_dates_updated_successfully": "Group dates updated successfully",
+    "Failed_to_update_questions": "Failed to update questions"
 }
