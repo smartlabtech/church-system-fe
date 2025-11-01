@@ -342,5 +342,20 @@
     "No_products_found": "لا توجد منتجات",
     "Click_add_product_to_get_started": "انقر على إضافة منتج للبدء",
     "Add_Your_First_Product": "أضف منتجك الأول",
-    "No_books_assigned_to_this_service": "لا توجد كتب مخصصة لهذه الخدمة"
+    "No_books_assigned_to_this_service": "لا توجد كتب مخصصة لهذه الخدمة",
+    "My_Profile": "حسابي الشخصي",
+    "Profile": "الملف الشخصي",
+    "Security": "الأمان",
+    "Contact": "معلومات الاتصال",
+    "Manage_your_account_settings": "إدارة إعدادات حسابك",
+    "Loading_profile": "جاري تحميل الملف الشخصي",
+    "Profile_Photo": "الصورة الشخصية",
+    "Personal_Information": "المعلومات الشخصية",
+    "Change_Password": "تغيير كلمة المرور",
+    "Keep_your_account_secure_with_strong_password": "احتفظ بحسابك آمنًا بكلمة مرور قوية",
+    "Mobile_Number": "رقم الموبايل",
+    "Update_your_mobile_number_for_account_verification": "قم بتحديث رقم موبايلك للتحقق من الحساب",
+    "Email_Address": "عنوان البريد الإلكتروني",
+    "Update_your_email_for_notifications": "قم بتحديث بريدك الإلكتروني لتلقي الإشعارات",
+    "Select_Service": "اختر الخدمة"
 }

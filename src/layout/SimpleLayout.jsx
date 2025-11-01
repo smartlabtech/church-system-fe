@@ -233,6 +233,9 @@ export function SimpleLayout() {
         <ServantInListModal myList={myServantList} />
       )}
 
+      {/* App Install Notification - Top Bar */}
+      <AppInstallPopup />
+
       {/* Header */}
       <Box
         component="header"
@@ -721,28 +724,6 @@ export function SimpleLayout() {
         )}
       </Box>
 
-      {/* Footer - Fixed at bottom */}
-      <Box
-        component="footer"
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          borderTop: "1px solid var(--mantine-color-gray-3)",
-          backgroundColor: "white",
-          padding: "6px 12px",
-          zIndex: 100,
-          boxShadow: "0 -2px 8px rgba(0,0,0,0.1)",
-          height: "50px"
-        }}
-      >
-        <Container size="xl">
-          <Center>
-            <AppInstallPopup />
-          </Center>
-        </Container>
-      </Box>
     </Box>
   )
 }

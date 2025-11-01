@@ -323,5 +323,20 @@
     "No_products_found": "No products found",
     "Click_add_product_to_get_started": "Click add product to get started",
     "Add_Your_First_Product": "Add Your First Product",
-    "No_books_assigned_to_this_service": "No books assigned to this service"
+    "No_books_assigned_to_this_service": "No books assigned to this service",
+    "My_Profile": "My Profile",
+    "Profile": "Profile",
+    "Security": "Security",
+    "Contact": "Contact",
+    "Manage_your_account_settings": "Manage your account settings",
+    "Loading_profile": "Loading profile",
+    "Profile_Photo": "Profile Photo",
+    "Personal_Information": "Personal Information",
+    "Change_Password": "Change Password",
+    "Keep_your_account_secure_with_strong_password": "Keep your account secure with a strong password",
+    "Mobile_Number": "Mobile Number",
+    "Update_your_mobile_number_for_account_verification": "Update your mobile number for account verification",
+    "Email_Address": "Email Address",
+    "Update_your_email_for_notifications": "Update your email for notifications",
+    "Select_Service": "Select Service"
 }

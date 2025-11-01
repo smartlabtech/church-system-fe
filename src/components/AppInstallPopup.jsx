@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import {Button, Group, Modal, Text} from "@mantine/core"
+import {Box, Button, Group, Text} from "@mantine/core"
 import {useTranslation} from "react-i18next"
 
 function AppInstallPopup() {
@@ -45,33 +45,43 @@ function AppInstallPopup() {
 
   return (
     <>
-      {/* {isInstallable && (
-        <Modal
-          opened={showModal}
-          onClose={() => setShowModal(false)}
-          title="Install App"
+      {isInstallable && showModal && (
+        <Box
+          style={{
+            backgroundColor: "var(--mantine-color-blue-6)",
+            color: "white",
+            padding: "8px 16px",
+            position: "sticky",
+            top: 0,
+            zIndex: 200,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+          }}
         >
-          <Text>Install church app for a better experience!</Text>
-          <Button onClick={handleInstallClick}>Install</Button>
-        </Modal>
-      )} */}
-      {isInstallable && (
-        <Group
-          justify="space-between"
-          w={"100%"}
-          dir={t("Dir")}
-          wrap="nowrap"
-          gap="xs"
-        >
-          <Text size="xs" style={{flex: 1, minWidth: 0, fontSize: "0.75rem"}}>{t("Install_App")}</Text>
-          <Button onClick={handleInstallClick} size="xs" style={{flexShrink: 0, fontSize: "0.7rem", padding: "4px 12px", height: "28px"}}>{t("Install")}</Button>
-        </Group>
+          <Group justify="space-between" wrap="nowrap" gap="md">
+            <Text size="sm" style={{flex: 1}}>
+              {t("Install_App")}
+            </Text>
+            <Group gap="xs">
+              <Button
+                onClick={handleInstallClick}
+                size="xs"
+                variant="white"
+                color="blue"
+              >
+                {t("Install")}
+              </Button>
+              <Button
+                onClick={() => setShowModal(false)}
+                size="xs"
+                variant="subtle"
+                style={{color: "white"}}
+              >
+                ✕
+              </Button>
+            </Group>
+          </Group>
+        </Box>
       )}
-
-      {/* Trigger Modal
-      {isInstallable && (
-        <Button onClick={() => setShowModal(true)}>Show Install Popup</Button>
-      )} */}
     </>
   )
 }
