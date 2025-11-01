@@ -8,9 +8,12 @@ The Bible MCQ DTOs have several inconsistencies and missing parameters that affe
 
 ## 1. UpdateMCQDTO - Missing Parameters
 
+### Architecture Clarification:
+**Note:** According to the system design, `choices` (answers) are updated through a separate module/endpoint, NOT through UpdateMCQDTO. This is a good separation of concerns.
+
 ### Current Issues:
 - ❌ Cannot update `service_bookId` (book reference)
-- ❌ Cannot update `choices` (answer options)
+- ✅ `choices` handled by separate module (CORRECT - not an issue)
 - ❌ Missing ability to change the book/chapter combination
 
 ### Recommended Fix:
@@ -53,13 +56,13 @@ export class UpdateMCQDTO {
   @ApiProperty({ description: 'end Date', type: Date, required: false })
   endDate?: Date;
 
-  @ApiProperty({ description: 'Choices', type: [choicesDTO], required: false })
-  choices?: choicesDTO[];  // ADD THIS
+  // NOTE: choices are NOT updated here
+  // They are managed through a separate choices/answers module
 }
 
 export const UpdateMCQSchema = Joi.object().keys({
   serviceId: MongoIdSchema.required(),
-  service_bookId: MongoIdSchema,  // ADD THIS
+  service_bookId: MongoIdSchema,  // ADD THIS - enable changing book reference
   chapter: Joi.number().min(1),
   fromVerse: Joi.number().min(1),
   toVerse: Joi.number().min(1),
@@ -68,7 +71,7 @@ export const UpdateMCQSchema = Joi.object().keys({
   question: QuestionSchema,
   startDate: Joi.date(),
   endDate: Joi.date(),
-  choices: Joi.array().items(choicesSchema).min(2)  // ADD THIS
+  // choices: NOT INCLUDED - handled by separate endpoint
 });
 ```
 
@@ -426,11 +429,12 @@ export const CreateMCQSchema = Joi.object().keys({
 
 If these parameters are missing, the frontend cannot:
 
-1. ❌ Update MCQ answer choices after creation
+1. ✅ Update MCQ answer choices - **HANDLED BY SEPARATE MODULE** (not an issue)
 2. ❌ Move a question to a different book
 3. ❌ Filter questions by active/inactive status
 4. ❌ Filter questions by points value
 5. ❌ Properly handle pagination types
+6. ❌ Get "currently active" questions reliably
 
 ### Frontend Code That Might Be Affected:
 
@@ -438,8 +442,7 @@ If these parameters are missing, the frontend cannot:
 // When editing an MCQ question
 const updateMCQ = async (mcqId, data) => {
   // Currently CANNOT update:
-  // - choices (answer options)
-  // - service_bookId (book reference)
+  // - service_bookId (book reference) ❌ NOT SUPPORTED - NEEDS FIX
 
   const payload = {
     serviceId: data.serviceId,
@@ -451,11 +454,18 @@ const updateMCQ = async (mcqId, data) => {
     question: data.question,
     startDate: data.startDate,
     endDate: data.endDate,
-    // choices: data.choices  // ❌ NOT SUPPORTED
-    // service_bookId: data.service_bookId  // ❌ NOT SUPPORTED
+    // service_bookId: data.service_bookId  // ❌ NOT SUPPORTED - NEEDS FIX
   }
 
   await axios.put(`/api/mcq/${mcqId}`, payload)
+}
+
+// Updating choices/answers - handled separately (CORRECT)
+const updateMCQChoices = async (mcqId, choices) => {
+  // This uses a separate endpoint/module
+  await axios.put(`/api/mcq/${mcqId}/choices`, { choices })
+  // OR
+  await axios.put(`/api/choices/${mcqId}`, { choices })
 }
 ```
 
@@ -464,7 +474,7 @@ const updateMCQ = async (mcqId, data) => {
 ## Priority Recommendations
 
 ### P0 - Critical:
-1. ✅ Add `choices` to UpdateMCQDTO - Cannot edit answers currently
+1. ~~Add `choices` to UpdateMCQDTO~~ - **NOT NEEDED** - Handled by separate module ✅
 2. ✅ Add `service_bookId` to UpdateMCQDTO - Cannot change book reference
 3. ✅ Fix `page` and `size` types in QueryMCQDTO (string → number)
 4. ✅ **Clarify date filter parameters** - Current `startDate`/`endDate` in QueryMCQDTO are ambiguous
@@ -479,6 +489,9 @@ const updateMCQ = async (mcqId, data) => {
 9. ✅ Add cross-field validation (toVerse >= fromVerse, endDate >= startDate)
 10. ✅ Add granular date filters (questionStartFrom, questionStartTo, etc.)
 
+### Architecture Note:
+✅ **Choices/Answers Module** - The system correctly separates MCQ question management from answer/choice management using different modules. This is good architecture and should be maintained.
+
 ---
 
 ## Testing Checklist
@@ -486,10 +499,12 @@ const updateMCQ = async (mcqId, data) => {
 After implementing fixes:
 
 - [ ] Create MCQ with all fields
-- [ ] Update MCQ choices
-- [ ] Update MCQ book reference
+- [ ] ~~Update MCQ choices~~ - Use separate choices module endpoint
+- [ ] Update MCQ book reference (service_bookId)
 - [ ] Query MCQs filtered by status
 - [ ] Query MCQs filtered by points
+- [ ] Query currently active MCQs (activeOn parameter)
+- [ ] Query MCQs active in date range (activeFrom/activeTo)
 - [ ] Verify pagination works with number types
 - [ ] Test validation: toVerse >= fromVerse
 - [ ] Test validation: endDate >= startDate
@@ -498,11 +513,15 @@ After implementing fixes:
 
 ## Summary
 
-The current DTOs prevent:
-1. Editing MCQ answer choices after creation
-2. Moving questions between books
-3. Filtering by question status
-4. Filtering by point values
-5. Proper type handling for pagination
+### Architecture Strengths:
+✅ **Separation of Concerns** - Choices/answers managed in separate module (good design)
 
-These limitations significantly reduce the flexibility and usability of the MCQ management system.
+### Current DTO Limitations:
+1. ~~Editing MCQ answer choices~~ - **Handled by separate module** ✅
+2. ❌ Moving questions between books (missing `service_bookId` in UpdateMCQDTO)
+3. ❌ Filtering by question status (missing `status` in QueryMCQDTO)
+4. ❌ Filtering by point values (missing `points` in QueryMCQDTO)
+5. ❌ Querying currently active questions (ambiguous date filters in QueryMCQDTO)
+6. ❌ Type-safe pagination (wrong types for `page`/`size`)
+
+These limitations reduce the flexibility and usability of the MCQ management system, but the separation of MCQ questions from answers is a good architectural decision that should be maintained.
