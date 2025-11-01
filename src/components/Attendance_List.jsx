@@ -142,7 +142,7 @@ function AttendanceList({userInfo}) {
             value: classData._id
           }))}
           onChange={(value) => updateClassId(value)}
-          placeholder={t("Select Class")}
+          placeholder={t("Select_Class")}
         />
         <Button
           m={2}

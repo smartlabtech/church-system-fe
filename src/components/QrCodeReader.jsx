@@ -91,7 +91,7 @@ function QrCodeReader({userInfo}) {
         loading: false,
         title: (
           <Title ta={"center"} size={"md"}>
-            {t("يمكنك أضافة الحضور الأن")}
+            {t("You_can_mark_attendance_now")}
           </Title>
         ),
         color: "transparent",
@@ -108,7 +108,7 @@ function QrCodeReader({userInfo}) {
                 sendQRHandler(userId)
               }}
             >
-              Attendance
+              {t("Attendance")}
             </Button>
           </Group>
         )
@@ -290,7 +290,7 @@ function QrCodeReader({userInfo}) {
           fullWidth
           onClick={openCameraHandler}
         >
-          Open Camera
+          {t("Open_Camera")}
         </Button>
       )}
 

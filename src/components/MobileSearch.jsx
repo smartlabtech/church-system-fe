@@ -59,7 +59,7 @@ function MobileSearch({userInfo}) {
         loading: false,
         title: (
           <Title ta={"center"} size={"md"}>
-            {t("يمكنك أضافة الحضور الأن")}
+            {t("You_can_mark_attendance_now")}
           </Title>
         ),
         color: "transparent",
@@ -76,7 +76,7 @@ function MobileSearch({userInfo}) {
                 checkMobileHandler(mobile)
               }}
             >
-              Attendance
+              {t("Attendance")}
             </Button>
           </Group>
         )

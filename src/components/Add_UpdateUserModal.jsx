@@ -264,7 +264,7 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
               <TextInput
                 flex={1}
                 label={t("Main_Mobile")}
-                placeholder="0127321..."
+                placeholder={t("Mobile_placeholder")}
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
                 required
@@ -291,7 +291,7 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
             <TextInput
               label={t("Home_Phone")}
               value={homePhone}
-              placeholder="0227012345"
+              placeholder={t("Home_phone_placeholder")}
               maxLength={10}
               minLength={10}
               onChange={(event) => {
@@ -360,14 +360,14 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
             />
             <TextInput
               label={t("E-mail")}
-              placeholder="hello@gmail.com"
+              placeholder={t("Email_placeholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
             />
             <TextInput
               label={t("Father_Confession")}
-              placeholder="ابونا يونان"
+              placeholder={t("Father_confession_placeholder")}
               value={fatherOfConfession}
               onChange={(e) => setFatherOfConfession(e.target.value)}
             />
@@ -376,14 +376,14 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
               <TextInput
                 flex={1}
                 label={t("City")}
-                placeholder="المعادي"
+                placeholder={t("City_placeholder")}
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
               <TextInput
                 flex={1}
                 label={t("Region")}
-                placeholder="صقر قريش - المعادي الجديدة ..."
+                placeholder={t("Region_placeholder")}
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
               />
@@ -419,7 +419,7 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
             </Group>
             <TextInput
               label={t("Distinctive_Sign")}
-              placeholder="بجوار صيدلية ..."
+              placeholder={t("Distinctive_sign_placeholder")}
               value={mark}
               onChange={(e) => setMark(e.target.value)}
             />

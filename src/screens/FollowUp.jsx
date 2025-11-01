@@ -167,11 +167,11 @@ function FollowUpScreen() {
               <Title order={2} c="primary.6">
                 <Group gap="xs">
                   <FaBinoculars size={24} />
-                  {t('Follow_Up')}
+                  {t("Follow_Up")}
                 </Group>
               </Title>
               <Text size="sm" c="dimmed" mt="xs">
-                {t('Track_and_manage_member_follow_up')}
+                {t("Track_and_manage_member_follow_up")}
               </Text>
             </div>
             <ControlAddUserCard service={selectedService} />
@@ -179,71 +179,78 @@ function FollowUpScreen() {
         </Paper>
 
         {/* Follow Up Content */}
-        <Paper shadow="sm" radius="md" p="xl" withBorder >
+        <Paper shadow="sm" radius="md" p="xl" withBorder>
           <Stack align="center">
             {/* Filters and Class Selection */}
-            <Group justify="space-between" style={{display: "flex", width: "100%"}} gap={10}>
-        <Menu
-          transitionProps={{transition: "pop"}}
-          withArrow
-          position="bottom-end"
-          withinPortal
-        >
-          <Menu.Target>
-            <ActionIcon variant="subtle" color="gray">
-              <BiDotsVertical size={"1.3rem"} stroke={1.5} />
-            </ActionIcon>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              dir={t("Dir")}
-              onClick={reportHandler}
-              disabled={!classId}
-              leftSection={<BiSolidReport size={"1.5rem"} stroke={1.5} />}
+            <Group
+              justify="space-between"
+              style={{display: "flex", width: "100%"}}
+              gap={10}
             >
-              {t("Send_To_Email")}
-            </Menu.Item>
+              <Menu
+                transitionProps={{transition: "pop"}}
+                withArrow
+                position="bottom-end"
+                withinPortal
+              >
+                <Menu.Target>
+                  <ActionIcon variant="subtle" color="gray">
+                    <BiDotsVertical size={"1.3rem"} stroke={1.5} />
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    dir={t("Dir")}
+                    onClick={reportHandler}
+                    disabled={!classId}
+                    leftSection={<BiSolidReport size={"1.5rem"} stroke={1.5} />}
+                  >
+                    {t("Send_To_Email")}
+                  </Menu.Item>
 
-            <Menu.Item
-              dir={t("Dir")}
-              onClick={attendanceReportHandler}
-              disabled={!classId}
-              leftSection={<BiSolidReport size={"1.5rem"} stroke={1.5} />}
-            >
-              {t("Attendance_Report")}
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+                  <Menu.Item
+                    dir={t("Dir")}
+                    onClick={attendanceReportHandler}
+                    disabled={!classId}
+                    leftSection={<BiSolidReport size={"1.5rem"} stroke={1.5} />}
+                  >
+                    {t("Attendance_Report")}
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
 
-        {selectedService?.classes?.length > 0 && (
-          <Select
-            flex={2}
-            data={selectedService.classes.map((classData) => ({
-              label: classData.name,
-              value: classData._id
-            }))}
-            value={classId}
-            onChange={searchHandler}
-            placeholder={t("Select Class")}
-          />
-        )}
-        <UsersFiltersModal searchHandler={searchHandler} classId={classId} />
-        {/* <BiSearch
+              {selectedService?.classes?.length > 0 && (
+                <Select
+                  flex={2}
+                  data={selectedService.classes.map((classData) => ({
+                    label: classData.name,
+                    value: classData._id
+                  }))}
+                  value={classId}
+                  onChange={searchHandler}
+                  placeholder={t("Select_Class")}
+                />
+              )}
+              <UsersFiltersModal
+                searchHandler={searchHandler}
+                classId={classId}
+              />
+              {/* <BiSearch
           size={"1.5rem"}
           onClick={searchHandler}
           disabled={!classId}
           color={!classId ? "gray" : "green"}
         /> */}
 
-        <Divider orientation="vertical" />
-        <FaWandMagicSparkles
-          onClick={assignedHandler}
-          size={"1.5rem"}
-          color="#ff7e5f"
-          style={{
-            cursor: "pointer"
-          }}
-        />
+              <Divider orientation="vertical" />
+              <FaWandMagicSparkles
+                onClick={assignedHandler}
+                size={"1.5rem"}
+                color="#ff7e5f"
+                style={{
+                  cursor: "pointer"
+                }}
+              />
             </Group>
 
             {/* User List */}

@@ -71,7 +71,7 @@ const KeyListner = ({userInfo}) => {
         loading: false,
         title: (
           <Title ta={"center"} size={"md"}>
-            {t("يمكنك أضافة الحضور الأن")}
+            {t("You_can_mark_attendance_now")}
           </Title>
         ),
         color: "transparent",
@@ -88,7 +88,7 @@ const KeyListner = ({userInfo}) => {
                 sendQRHandler(userId)
               }}
             >
-              Attendance
+              {t("Attendance")}
             </Button>
           </Group>
         )
