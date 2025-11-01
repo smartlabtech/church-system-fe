@@ -37,6 +37,29 @@ export const MCQListReducer = (state = { mcqs: [] }, action) => {
     case MCQ_LIST_FAIL:
       return { loading: false, error: action.payload, mcqs: [] }
 
+    case MCQ_CREATE_SUCCESS:
+      // Add new MCQ to the list
+      return {
+        ...state,
+        mcqs: [...(state.mcqs || []), action.payload]
+      }
+
+    case MCQ_UPDATE_SUCCESS:
+      // Update existing MCQ in the list
+      return {
+        ...state,
+        mcqs: (state.mcqs || []).map(mcq =>
+          mcq._id === action.payload._id ? action.payload : mcq
+        )
+      }
+
+    case MCQ_DELETE_SUCCESS:
+      // Remove deleted MCQ from the list
+      return {
+        ...state,
+        mcqs: (state.mcqs || []).filter(mcq => mcq._id !== action.payload)
+      }
+
     default:
       return state
   }

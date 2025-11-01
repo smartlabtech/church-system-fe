@@ -106,13 +106,7 @@ export const createMCQ = (mcqData) => async (dispatch, getState) => {
       autoClose: 5000
     })
 
-    // Refresh the list after creating
-    if (mcqData.serviceId && mcqData.service_bookId) {
-      dispatch(listMCQs({
-        serviceId: mcqData.serviceId,
-        service_bookId: mcqData.service_bookId
-      }))
-    }
+    // No need to refresh the list - reducer updates state directly from payload
   } catch (error) {
     dispatch({
       type: MCQ_CREATE_FAIL,
@@ -167,10 +161,7 @@ export const updateMCQ = (mcqId, updateData) => async (dispatch, getState) => {
       autoClose: 5000
     })
 
-    // Refresh the list after updating
-    if (updateData.serviceId) {
-      dispatch(listMCQs({ serviceId: updateData.serviceId }))
-    }
+    // No need to refresh the list - reducer updates state directly from payload
   } catch (error) {
     dispatch({
       type: MCQ_UPDATE_FAIL,
@@ -220,10 +211,7 @@ export const deleteMCQ = (mcqId, serviceId, service_bookId) => async (dispatch, 
       autoClose: 5000
     })
 
-    // Refresh the list after deleting
-    if (serviceId && service_bookId) {
-      dispatch(listMCQs({ serviceId, service_bookId }))
-    }
+    // No need to refresh the list - reducer updates state directly from payload
   } catch (error) {
     dispatch({
       type: MCQ_DELETE_FAIL,

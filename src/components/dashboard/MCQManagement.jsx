@@ -22,10 +22,10 @@ import {
   ThemeIcon,
   Checkbox,
   ScrollArea,
-  Tabs,
   Alert,
   Box
 } from '@mantine/core'
+import { DateInput } from '@mantine/dates'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import {
@@ -63,11 +63,13 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
   const [selectedChapter, setSelectedChapter] = useState('')
   const [modalOpened, setModalOpened] = useState(false)
   const [editingMCQ, setEditingMCQ] = useState(null)
+  const [hasLoadedInitially, setHasLoadedInitially] = useState(false)
 
   // Filter states
   const [filterStatus, setFilterStatus] = useState('')
   const [filterPoints, setFilterPoints] = useState('')
-  const [filterActiveDate, setFilterActiveDate] = useState(null)
+  const [filterStartDate, setFilterStartDate] = useState(null)
+  const [filterEndDate, setFilterEndDate] = useState(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -81,6 +83,8 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       ar: ''
     },
     points: 10,
+    startDate: null,
+    endDate: null,
     choices: [
       { text: { en: '', ar: '' }, isTrue: false },
       { text: { en: '', ar: '' }, isTrue: false },
@@ -118,9 +122,24 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
     }
   }, [dispatch, selectedService])
 
-  // Load MCQs when filters change
+  // Load MCQs when filters change (only on initial load or when filters change)
   useEffect(() => {
     if (selectedService && selectedBook) {
+      // Only load on initial mount when service and book are selected
+      if (!hasLoadedInitially) {
+        const queryParams = {
+          serviceId: selectedService,
+          service_bookId: selectedBook
+        }
+        dispatch(listMCQs(queryParams))
+        setHasLoadedInitially(true)
+      }
+    }
+  }, [selectedService, selectedBook, hasLoadedInitially, dispatch])
+
+  // Separate effect for filter changes (only runs after initial load)
+  useEffect(() => {
+    if (hasLoadedInitially && selectedService && selectedBook) {
       const queryParams = {
         serviceId: selectedService,
         service_bookId: selectedBook
@@ -134,12 +153,15 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       if (filterPoints !== '') {
         queryParams.points = Number(filterPoints)
       }
-      if (filterActiveDate) {
-        queryParams.activeOn = filterActiveDate
+      if (filterStartDate) {
+        queryParams.startDate = filterStartDate.toISOString()
+      }
+      if (filterEndDate) {
+        queryParams.endDate = filterEndDate.toISOString()
       }
       dispatch(listMCQs(queryParams))
     }
-  }, [dispatch, selectedService, selectedBook, selectedChapter, filterStatus, filterPoints, filterActiveDate])
+  }, [selectedChapter, filterStatus, filterPoints, filterStartDate, filterEndDate, hasLoadedInitially, selectedService, selectedBook, dispatch])
 
   // Handle success/error messages
   useEffect(() => {
@@ -155,16 +177,7 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       dispatch({ type: MCQ_UPDATE_RESET })
     }
 
-    if (deleteSuccess) {
-      // Refresh the list
-      if (selectedService && selectedBook) {
-        dispatch(listMCQs({
-          serviceId: selectedService,
-          service_bookId: selectedBook,
-          chapter: selectedChapter
-        }))
-      }
-    }
+    // Note: No need to refresh after operations - reducer updates the list automatically
 
     if (answerSuccess && answerResult) {
       dispatch({ type: MCQ_ANSWER_SUBMIT_RESET })
@@ -183,6 +196,8 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
         ar: ''
       },
       points: 10,
+      startDate: null,
+      endDate: null,
       choices: [
         { text: { en: '', ar: '' }, isTrue: false },
         { text: { en: '', ar: '' }, isTrue: false },
@@ -216,6 +231,8 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
         toVerse: mcq.toVerse || '',
         question: mcq.question || { en: '', ar: '' },
         points: mcq.points || 10,
+        startDate: mcq.startDate ? new Date(mcq.startDate) : null,
+        endDate: mcq.endDate ? new Date(mcq.endDate) : null,
         choices: mappedChoices
       })
     } else {
@@ -225,7 +242,7 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
   }
 
   const handleSubmit = () => {
-    // Only validate choices when creating (not when updating)
+    // Only validate choices when creating (not when editing)
     if (!editingMCQ) {
       // Validate at least one correct answer
       const hasCorrectAnswer = formData.choices.some(choice => choice.isTrue)
@@ -253,8 +270,7 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
     }
 
     const mcqData = {
-      serviceId: formData.serviceId,
-      service_bookId: formData.service_bookId,
+      serviceId: formData.serviceId,  // Required in both create and update
       chapter: Number(formData.chapter) || 0,
       fromVerse: Number(formData.fromVerse) || 0,
       toVerse: Number(formData.toVerse) || 0,
@@ -262,11 +278,32 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       points: Number(formData.points) || 10
     }
 
-    // Only include choices when creating (NOT when updating)
+    // Add service_bookId and choices only when creating
     if (!editingMCQ) {
+      mcqData.service_bookId = formData.service_bookId
+
+      // Include choices when creating
       mcqData.choices = formData.choices.filter(choice =>
         choice.text.en.trim() || choice.text.ar.trim()
       )
+    }
+
+    // Add dates if provided
+    if (formData.startDate) {
+      const startDate = formData.startDate instanceof Date
+        ? formData.startDate
+        : new Date(formData.startDate)
+      // Set to start of day (00:00:00.000)
+      startDate.setHours(0, 0, 0, 0)
+      mcqData.startDate = startDate.toISOString()
+    }
+    if (formData.endDate) {
+      const endDate = formData.endDate instanceof Date
+        ? formData.endDate
+        : new Date(formData.endDate)
+      // Set to end of day (23:59:59.999)
+      endDate.setHours(23, 59, 59, 999)
+      mcqData.endDate = endDate.toISOString()
     }
 
     if (editingMCQ) {
@@ -440,7 +477,6 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                   }))
                 ]}
                 leftSection={<FaListOl size={14} />}
-                clearable
                 size="xs"
                 style={{ flex: 1, minWidth: 120 }}
               />
@@ -454,7 +490,6 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                 { value: 'active', label: t('Active') },
                 { value: 'inactive', label: t('Inactive') }
               ]}
-              clearable
               size="xs"
               style={{ flex: 1, minWidth: 100 }}
             />
@@ -463,9 +498,46 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
               value={filterPoints}
               onChange={setFilterPoints}
               min={0}
-              clearable
               size="xs"
               style={{ flex: 1, minWidth: 80 }}
+            />
+          </Group>
+          <Group gap="xs" wrap="wrap">
+            <DateInput
+              placeholder={t('Start_Date')}
+              value={filterStartDate}
+              onChange={setFilterStartDate}
+              size="xs"
+              style={{ flex: 1, minWidth: 140 }}
+              valueFormat="DD MMM YYYY"
+              dateParser={(input) => {
+                const parts = input.split('/')
+                if (parts.length === 3) {
+                  const day = parseInt(parts[0], 10)
+                  const month = parseInt(parts[1], 10) - 1
+                  const year = parseInt(parts[2], 10)
+                  return new Date(year, month, day)
+                }
+                return null
+              }}
+            />
+            <DateInput
+              placeholder={t('End_Date')}
+              value={filterEndDate}
+              onChange={setFilterEndDate}
+              size="xs"
+              style={{ flex: 1, minWidth: 140 }}
+              valueFormat="DD MMM YYYY"
+              dateParser={(input) => {
+                const parts = input.split('/')
+                if (parts.length === 3) {
+                  const day = parseInt(parts[0], 10)
+                  const month = parseInt(parts[1], 10) - 1
+                  const year = parseInt(parts[2], 10)
+                  return new Date(year, month, day)
+                }
+                return null
+              }}
             />
             <Button
               leftSection={<FaPlus />}
@@ -572,9 +644,11 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                             <Badge size="xs" color="teal" variant="filled">
                               {mcq.points} pts
                             </Badge>
-                            <Badge size="xs" color="orange" variant="light">
-                              {mcq.choices.length} choices
-                            </Badge>
+                            {mcq.choices && (
+                              <Badge size="xs" color="orange" variant="light">
+                                {mcq.choices.length} choices
+                              </Badge>
+                            )}
                           </Group>
                         </Stack>
                         <ActionIcon
@@ -585,6 +659,7 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                             e.stopPropagation()
                             handleOpenModal(mcq)
                           }}
+                          title={t('Edit_Question')}
                         >
                           <FaEdit size={12} />
                         </ActionIcon>
@@ -613,82 +688,111 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
         size="xl"
       >
         <Stack gap="md">
-          <Tabs defaultValue="question">
-            <Tabs.List>
-              <Tabs.Tab value="question">
-                {t('Question')}
-              </Tabs.Tab>
-              <Tabs.Tab value="choices">
-                {t('Choices')}
-              </Tabs.Tab>
-            </Tabs.List>
+          {/* Question fields */}
+          <Stack gap="md">
+            <Group grow>
+              <NumberInput
+                label={t('Chapter')}
+                placeholder={t('Enter_chapter_number')}
+                min={1}
+                value={formData.chapter}
+                onChange={(value) => setFormData({ ...formData, chapter: value })}
+                leftSection={<FaListOl size={14} />}
+                required
+              />
+              <NumberInput
+                label={t('From_Verse')}
+                placeholder={t('Start_verse')}
+                min={1}
+                value={formData.fromVerse}
+                onChange={(value) => setFormData({ ...formData, fromVerse: value })}
+              />
+              <NumberInput
+                label={t('To_Verse')}
+                placeholder={t('End_verse')}
+                min={1}
+                value={formData.toVerse}
+                onChange={(value) => setFormData({ ...formData, toVerse: value })}
+              />
+            </Group>
 
-            <Tabs.Panel value="question" pt="md">
-              <Stack gap="md">
-                <Group grow>
-                  <NumberInput
-                    label={t('Chapter')}
-                    placeholder={t('Enter_chapter_number')}
-                    min={1}
-                    value={formData.chapter}
-                    onChange={(value) => setFormData({ ...formData, chapter: value })}
-                    leftSection={<FaListOl size={14} />}
-                    required
-                  />
-                  <NumberInput
-                    label={t('From_Verse')}
-                    placeholder={t('Start_verse')}
-                    min={1}
-                    value={formData.fromVerse}
-                    onChange={(value) => setFormData({ ...formData, fromVerse: value })}
-                  />
-                  <NumberInput
-                    label={t('To_Verse')}
-                    placeholder={t('End_verse')}
-                    min={1}
-                    value={formData.toVerse}
-                    onChange={(value) => setFormData({ ...formData, toVerse: value })}
-                  />
-                </Group>
+            <Textarea
+              label={t('Question_English')}
+              placeholder={t('Enter_question_in_English')}
+              value={formData.question.en}
+              onChange={(e) => setFormData({
+                ...formData,
+                question: { ...formData.question, en: e.target.value }
+              })}
+              minRows={2}
+              required
+            />
 
-                <Textarea
-                  label={t('Question_English')}
-                  placeholder={t('Enter_question_in_English')}
-                  value={formData.question.en}
-                  onChange={(e) => setFormData({
-                    ...formData,
-                    question: { ...formData.question, en: e.target.value }
-                  })}
-                  minRows={2}
-                  required
-                />
+            <Textarea
+              label={t('Question_Arabic')}
+              placeholder={t('Enter_question_in_Arabic')}
+              value={formData.question.ar}
+              onChange={(e) => setFormData({
+                ...formData,
+                question: { ...formData.question, ar: e.target.value }
+              })}
+              minRows={2}
+              required
+            />
 
-                <Textarea
-                  label={t('Question_Arabic')}
-                  placeholder={t('Enter_question_in_Arabic')}
-                  value={formData.question.ar}
-                  onChange={(e) => setFormData({
-                    ...formData,
-                    question: { ...formData.question, ar: e.target.value }
-                  })}
-                  minRows={2}
-                  required
-                />
+            <NumberInput
+              label={t('Points')}
+              placeholder={t('Enter_points')}
+              min={1}
+              max={100}
+              value={formData.points}
+              onChange={(value) => setFormData({ ...formData, points: value })}
+              description={t('Points_awarded_for_correct_answer')}
+            />
 
-                <NumberInput
-                  label={t('Points')}
-                  placeholder={t('Enter_points')}
-                  min={1}
-                  max={100}
-                  value={formData.points}
-                  onChange={(value) => setFormData({ ...formData, points: value })}
-                  description={t('Points_awarded_for_correct_answer')}
-                />
-              </Stack>
-            </Tabs.Panel>
+            <Group grow>
+              <DateInput
+                label={t('Start_Date')}
+                placeholder={t('Select_start_date')}
+                value={formData.startDate}
+                onChange={(value) => setFormData({ ...formData, startDate: value })}
+                valueFormat="DD MMM YYYY"
+                description={t('Question_active_from_this_date')}
+                dateParser={(input) => {
+                  const parts = input.split('/')
+                  if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10)
+                    const month = parseInt(parts[1], 10) - 1
+                    const year = parseInt(parts[2], 10)
+                    return new Date(year, month, day)
+                  }
+                  return null
+                }}
+              />
+              <DateInput
+                label={t('End_Date')}
+                placeholder={t('Select_end_date')}
+                value={formData.endDate}
+                onChange={(value) => setFormData({ ...formData, endDate: value })}
+                valueFormat="DD MMM YYYY"
+                description={t('Question_active_until_this_date')}
+                dateParser={(input) => {
+                  const parts = input.split('/')
+                  if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10)
+                    const month = parseInt(parts[1], 10) - 1
+                    const year = parseInt(parts[2], 10)
+                    return new Date(year, month, day)
+                  }
+                  return null
+                }}
+              />
+            </Group>
 
-            <Tabs.Panel value="choices" pt="md">
-              <Stack gap="md">
+            {/* Choices section - only show when creating */}
+            {!editingMCQ && (
+              <Stack gap="sm">
+                <Divider label={t('Choices')} labelPosition="center" />
                 <Group justify="space-between">
                   <Text size="sm" c="dimmed">
                     {t('Enter_choices_and_mark_correct_answer')}
@@ -733,8 +837,8 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
                   </Paper>
                 ))}
               </Stack>
-            </Tabs.Panel>
-          </Tabs>
+            )}
+          </Stack>
 
           <Divider />
 

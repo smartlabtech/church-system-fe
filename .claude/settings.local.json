@@ -25,7 +25,11 @@
       "Bash(curl:*)",
       "Bash(npm run build:*)",
       "Bash(rm:*)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "Bash(for file in \"/mnt/g/Church System/Church System FE/src/components/updateProfileCard.jsx\" \"/mnt/g/Church System/Church System FE/src/components/ChangeMobileCard.jsx\" \"/mnt/g/Church System/Church System FE/src/components/ChangeEmailCard.jsx\" \"/mnt/g/Church System/Church System FE/src/components/changePwCard.jsx\")",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(git restore:*)",
+      "Bash(timeout 10 npm run dev)"
     ],
     "deny": [],
     "ask": []
