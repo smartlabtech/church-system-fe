@@ -57,8 +57,7 @@ function HomeScreen() {
   return (
     <Box
       style={{
-        backgroundColor: "var(--mantine-color-gray-0)",
-        minHeight: "calc(100vh - 140px)"
+        backgroundColor: "var(--mantine-color-gray-0)"
       }}
     >
       <Container size="xl" px={{base: "md", sm: "lg", md: "xl"}}>

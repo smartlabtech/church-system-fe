@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react"
 import {Routes, Route, useNavigate, useLocation} from "react-router-dom"
 import {useDispatch, useSelector} from "react-redux"
+import {ENV} from "../utils/env"
 import {
   Box,
   Group,
@@ -273,14 +274,9 @@ export function SimpleLayout() {
                   >
                     <FaHome size={20} />
                   </Box>
-                  <Stack gap={0} visibleFrom="sm">
-                    <Text size="sm" fw={600} c="primary.6">
-                      كنيسة القديس مارمرقس
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      Saint Mark Church - Maadi
-                    </Text>
-                  </Stack>
+                  <Text size="sm" fw={600} c="primary.6" visibleFrom="sm">
+                    {t("lang") === "ar" ? ENV.CHURCH_NAME_AR : ENV.CHURCH_NAME_EN}
+                  </Text>
                 </Group>
               </UnstyledButton>
 
@@ -657,7 +653,7 @@ export function SimpleLayout() {
                 overflowY: "auto",
                 overflowX: "hidden",
                 paddingTop: "20px",
-                paddingBottom: "100px"
+                paddingBottom: "40px"
               }}
             >
               <Routes>
@@ -705,7 +701,7 @@ export function SimpleLayout() {
           </Box>
         ) : (
           /* Non-Dashboard Routes */
-          <Box style={{paddingTop: "20px", paddingBottom: "100px"}}>
+          <Box style={{paddingTop: "20px", paddingBottom: "40px"}}>
             <Routes>
               <Route path="/" element={<HomeScreen />} />
               <Route path="/store" element={<StoreScreen />} />
