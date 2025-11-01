@@ -581,18 +581,18 @@ export function SimpleLayout() {
           <Box style={{display: "flex", width: "100%", minHeight: "100%"}}>
             {/* Sidebar - Desktop Only */}
             <Box
-              visibleFrom="md"
+              hiddenFrom="base"
+              visibleFrom="lg"
               style={{
                 width: 250,
+                flexShrink: 0,
                 backgroundColor: isAdminArea ? "#fef9e7" : "white",
                 borderRight: "1px solid var(--mantine-color-gray-3)",
                 padding: "20px",
-                position: "fixed",
-                left: 0,
-                top: 60,
                 height: "calc(100vh - 60px)",
                 overflowY: "auto",
-                zIndex: 50
+                position: "sticky",
+                top: 60
               }}
             >
               <Stack gap="xs">
@@ -657,14 +657,7 @@ export function SimpleLayout() {
                 overflowY: "auto",
                 overflowX: "hidden",
                 paddingTop: "20px",
-                paddingBottom: "100px",
-                height: "100%"
-              }}
-              sx={{
-                marginLeft: "250px",
-                "@media (max-width: 991px)": {
-                  marginLeft: 0
-                }
+                paddingBottom: "100px"
               }}
             >
               <Routes>
