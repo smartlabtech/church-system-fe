@@ -11,6 +11,7 @@ services:
       - FRONTEND_CHURCH_ID=${FRONTEND_CHURCH_ID:-63cd11f4808cc1923ca5f3ca}
       - FRONTEND_CHURCH_NAME_AR=${FRONTEND_CHURCH_NAME_AR:-كنيسة القديس مارمرقس}
       - FRONTEND_CHURCH_NAME_EN=${FRONTEND_CHURCH_NAME_EN:-Saint Mark Church - Maadi}
+      - FRONTEND_SITE_URL=${FRONTEND_SITE_URL:-https://stmarkmaadi-fekin.ondigitalocean.app}
     healthcheck:
       # Frontend health check on port 80
       test: ["CMD", "curl", "-f", "http://localhost:80/"]

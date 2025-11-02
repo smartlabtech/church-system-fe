@@ -2,6 +2,10 @@ import {StrictMode} from "react"
 import {createRoot} from "react-dom/client"
 import App from "./App.jsx"
 import "./i18n/i18n"
+import {updateMetaTags} from "./utils/updateMetaTags"
+
+// Update meta tags with church-specific information
+updateMetaTags()
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

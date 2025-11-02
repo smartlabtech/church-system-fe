@@ -28,6 +28,7 @@ export const ENV = {
   API_CHURCH_ID: getEnvVar('FRONTEND_CHURCH_ID', '63cd11f4808cc1923ca5f3ca'),
   CHURCH_NAME_AR: getEnvVar('FRONTEND_CHURCH_NAME_AR', 'كنيسة القديس مارمرقس'),
   CHURCH_NAME_EN: getEnvVar('FRONTEND_CHURCH_NAME_EN', 'Saint Mark Church - Maadi'),
+  SITE_URL: getEnvVar('FRONTEND_SITE_URL', 'http://localhost:5173'),
 };
 
 // For debugging - log which environment variables are being used
@@ -38,6 +39,7 @@ if (import.meta.env.DEV) {
     API_CHURCH_ID: ENV.API_CHURCH_ID,
     CHURCH_NAME_AR: ENV.CHURCH_NAME_AR,
     CHURCH_NAME_EN: ENV.CHURCH_NAME_EN,
+    SITE_URL: ENV.SITE_URL,
   });
 }
 
