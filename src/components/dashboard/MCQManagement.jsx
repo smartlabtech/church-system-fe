@@ -281,8 +281,8 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
       chapter: Number(formData.chapter) || 0,
       fromVerse: Number(formData.fromVerse) || 0,
       toVerse: Number(formData.toVerse) || 0,
-      question: formData.question,
-      points: Number(formData.points) || 10
+      question: formData.question
+      // points is managed by backend, don't send it
     }
 
     // Add service_bookId and choices only when creating
@@ -382,8 +382,8 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
           chapter: mcq.chapter,
           fromVerse: mcq.fromVerse,
           toVerse: mcq.toVerse,
-          question: mcq.question,
-          points: mcq.points
+          question: mcq.question
+          // points is managed by backend, don't send it
         }
 
         // Add dates if provided
@@ -910,16 +910,6 @@ const MCQManagement = ({ selectedBookId, onSelectQuestion, selectedQuestionId, h
               })}
               minRows={2}
               required
-            />
-
-            <NumberInput
-              label={t('Points')}
-              placeholder={t('Enter_points')}
-              min={1}
-              max={100}
-              value={formData.points}
-              onChange={(value) => setFormData({ ...formData, points: value })}
-              description={t('Points_awarded_for_correct_answer')}
             />
 
             <Group grow>

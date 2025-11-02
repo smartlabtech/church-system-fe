@@ -10,7 +10,8 @@ import {
   Modal,
   SimpleGrid,
   Stack,
-  Text
+  Text,
+  TextInput
 } from "@mantine/core"
 import {useMediaQuery} from "@mantine/hooks"
 import {FaFilter} from "react-icons/fa"
@@ -33,7 +34,9 @@ function UsersFiltersModal({searchHandler, classId}) {
         birthdayMonthes: Array(12).fill(false),
         male: false,
         female: false,
-        status: "IN_CHURCH"
+        status: "IN_CHURCH",
+        study: "",
+        skill: ""
       }
     })
   }, [dispatch])
@@ -92,6 +95,24 @@ function UsersFiltersModal({searchHandler, classId}) {
     })
   }
 
+  const updateStudy = (value) => {
+    let newFilters = filters
+    newFilters["study"] = value
+    dispatch({
+      type: SET_USERS_FILTERS,
+      payload: newFilters
+    })
+  }
+
+  const updateSkill = (value) => {
+    let newFilters = filters
+    newFilters["skill"] = value
+    dispatch({
+      type: SET_USERS_FILTERS,
+      payload: newFilters
+    })
+  }
+
   const clearFilter = () => {
     dispatch({
       type: SET_USERS_FILTERS,
@@ -99,7 +120,9 @@ function UsersFiltersModal({searchHandler, classId}) {
         birthdayMonthes: Array(12).fill(false),
         male: false,
         female: false,
-        status: "IN_CHURCH"
+        status: "IN_CHURCH",
+        study: "",
+        skill: ""
       }
     })
   }
@@ -230,6 +253,25 @@ function UsersFiltersModal({searchHandler, classId}) {
                     {t(val)}
                   </Button>
                 ))}
+              </SimpleGrid>
+            </Stack>
+            <Divider />
+
+            <Stack align="center">
+              <Text fw={500}>{t("Education_and_Professional_Info")}</Text>
+              <SimpleGrid cols={{base: 1, sm: 2}} spacing="xs" w="100%">
+                <TextInput
+                  label={t("Study")}
+                  placeholder={t("Study_placeholder")}
+                  value={filters?.study || ""}
+                  onChange={(e) => updateStudy(e.target.value)}
+                />
+                <TextInput
+                  label={t("Skills")}
+                  placeholder={t("Skills_placeholder")}
+                  value={filters?.skill || ""}
+                  onChange={(e) => updateSkill(e.target.value)}
+                />
               </SimpleGrid>
             </Stack>
             <Divider />

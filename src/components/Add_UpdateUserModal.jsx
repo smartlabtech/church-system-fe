@@ -19,7 +19,8 @@ import {
   FileInput,
   Title,
   Group,
-  Divider
+  Divider,
+  TagsInput
 } from "@mantine/core"
 import {useTranslation} from "react-i18next"
 import {notifications} from "@mantine/notifications"
@@ -82,6 +83,14 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
   const [location, setLocation] = useState(userDetails?.address?.location || "")
 
   const [userStatus, setUserStatus] = useState(userDetails?.status || "")
+
+  // Study and skills fields (both are arrays now)
+  const [study, setStudy] = useState(
+    Array.isArray(userDetails?.study) ? userDetails.study : []
+  )
+  const [skills, setSkills] = useState(
+    Array.isArray(userDetails?.skills) ? userDetails.skills : []
+  )
 
   const locationHandler = () => {
     const options = {
@@ -150,7 +159,9 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
       gender,
       birthday: birthDay,
       address: address,
-      status: userStatus
+      status: userStatus,
+      study: study.filter(s => s && s.trim().length > 0),
+      skills: skills.filter(s => s && s.trim().length > 0)
     }
 
     if (birthDay) {
@@ -446,6 +457,27 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
                 <Button onClick={() => setLocation("")}>{t("Clear")}</Button>
               )}
             </Group>
+
+            <Divider label={t("Education_and_Professional_Info")} labelPosition="center" mt="xl" />
+
+            <TagsInput
+              label={t("Study")}
+              placeholder={t("Study_placeholder")}
+              value={study}
+              onChange={setStudy}
+              splitChars={[',', '،']}
+              clearable
+            />
+
+            <TagsInput
+              label={t("Skills")}
+              placeholder={t("Skills_placeholder")}
+              value={skills}
+              onChange={setSkills}
+              splitChars={[',', '،']}
+              clearable
+            />
+
             {userDetails?._id && (
               <UserStatus status={userStatus} onUpdateStatus={setUserStatus} />
             )}

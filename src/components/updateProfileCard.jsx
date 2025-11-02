@@ -13,7 +13,7 @@ import {
   FaSearchLocation
 } from "react-icons/fa"
 
-import {Card, TextInput, Button, Group, Stack, Divider} from "@mantine/core"
+import {Card, TextInput, Button, Group, Stack, Divider, Text, TagsInput} from "@mantine/core"
 import {notifications} from "@mantine/notifications"
 import Lottie from "react-lottie-player"
 import no from "../assets/lottie/No.json"
@@ -60,6 +60,14 @@ function UpdateProfileCard() {
   const [mark, setMark] = useState(userInfo?.user?.address?.mark || "")
   const [location, setLocation] = useState(
     userInfo?.user?.address?.location || ""
+  )
+
+  // Study and skills fields (both are arrays now)
+  const [study, setStudy] = useState(
+    Array.isArray(userInfo?.user?.study) ? userInfo.user.study : []
+  )
+  const [skills, setSkills] = useState(
+    Array.isArray(userInfo?.user?.skills) ? userInfo.user.skills : []
   )
 
   const submitHandler = () => {
@@ -154,6 +162,10 @@ function UpdateProfileCard() {
 
     updateProfile["fatherOfConfession"] = fatherOfConfession
 
+    // Add study and skills to update
+    updateProfile["study"] = study.filter(s => s && s.trim().length > 0)
+    updateProfile["skills"] = skills.filter(s => s && s.trim().length > 0)
+
     if (pass) dispatch(updateUserProfile(updateProfile))
   }
 
@@ -211,7 +223,7 @@ function UpdateProfileCard() {
         <TextInput
           label={t("Home_Phone")}
           value={homePhone}
-          placeholder="0227012345"
+          placeholder={t("Home_phone_placeholder")}
           maxLength={10}
           minLength={10}
           onChange={(event) => {
@@ -256,13 +268,13 @@ function UpdateProfileCard() {
         />
         <TextInput
           label={t("City")}
-          placeholder="المعادي"
+          placeholder={t("City_placeholder")}
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
         <TextInput
           label={t("Region")}
-          placeholder="صقر قريش - المعادي الجديدة ..."
+          placeholder={t("Region_placeholder")}
           value={region}
           onChange={(e) => setRegion(e.target.value)}
         />
@@ -292,10 +304,30 @@ function UpdateProfileCard() {
         />
         <TextInput
           label={t("Distinctive_Sign")}
-          placeholder="بجوار صيدلية ..."
+          placeholder={t("Distinctive_sign_placeholder")}
           value={mark}
           onChange={(e) => setMark(e.target.value)}
         />
+
+        <Divider label={t("Education_and_Professional_Info")} labelPosition="center" mt="xl" />
+
+        <TagsInput
+          label={t("Study")}
+          placeholder={t("Study_placeholder")}
+          value={study}
+          onChange={setStudy}
+          splitChars={[',', '،']}
+          clearable
+        />
+        <TagsInput
+          label={t("Skills")}
+          placeholder={t("Skills_placeholder")}
+          value={skills}
+          onChange={setSkills}
+          splitChars={[',', '،']}
+          clearable
+        />
+
         <Group justify="center">
           {location && (
             <iframe

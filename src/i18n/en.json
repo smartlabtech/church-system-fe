@@ -237,6 +237,13 @@
     "Money_to_Points_Ratio": "Money to Points Ratio",
     "Points_per_pound": "Points per pound",
     "Send_User_Credentials": "Send User Credentials",
+    "Telegram_Configuration": "Telegram Configuration",
+    "Telegram_Chat_ID": "Telegram Chat ID",
+    "Telegram_Chat_ID_placeholder": "e.g., -1001234567890",
+    "Telegram_Chat_ID_description": "The chat ID for the service communication channel",
+    "Telegram_Bot_Token": "Telegram Bot Token",
+    "Telegram_Bot_Token_placeholder": "e.g., 123456789:ABCdefGHIjklMNOpqrsTUVwxyz",
+    "Telegram_Bot_Token_description": "The bot token for sending messages",
     "Loading_data": "Loading data",
     "No_Services_Assigned": "No Services Assigned",
     "Served_By": "Served By",
@@ -452,5 +459,10 @@
     "City_placeholder": "City name",
     "Region_placeholder": "Region or district name",
     "Distinctive_sign_placeholder": "Next to landmark...",
-    "Open_Camera": "Open Camera"
+    "Open_Camera": "Open Camera",
+    "Education_and_Professional_Info": "Education & Professional Information",
+    "Study": "Study",
+    "Study_placeholder": "e.g., Engineer, Cairo University, Computer Science (separated by commas)",
+    "Skills": "Skills",
+    "Skills_placeholder": "e.g., Teaching, Music, Photography (separated by commas)"
 }

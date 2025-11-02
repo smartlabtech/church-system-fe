@@ -151,7 +151,9 @@ function FollowUpScreen() {
       ...(filters.lastAttendance && {lastAttendance: filters.lastAttendance}),
       ...(filters.lastFollowup && {lastFollowUp: filters.lastFollowup}),
       ...(filters.status && {status: filters.status}),
-      ...(birthdayIn.length && {birthdayIn})
+      ...(birthdayIn.length && {birthdayIn}),
+      ...(filters.study && {study: filters.study}),
+      ...(filters.skill && {skill: filters.skill})
     }
   }
 

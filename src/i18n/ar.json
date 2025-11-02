@@ -256,6 +256,13 @@
     "Money_to_Points_Ratio": "نسبة المال إلى النقاط",
     "Points_per_pound": "نقاط لكل جنيه",
     "Send_User_Credentials": "إرسال بيانات اعتماد المستخدم",
+    "Telegram_Configuration": "إعدادات تليجرام",
+    "Telegram_Chat_ID": "معرف محادثة تليجرام",
+    "Telegram_Chat_ID_placeholder": "مثال: -1001234567890",
+    "Telegram_Chat_ID_description": "معرف المحادثة لقناة التواصل الخاصة بالخدمة",
+    "Telegram_Bot_Token": "رمز بوت تليجرام",
+    "Telegram_Bot_Token_placeholder": "مثال: 123456789:ABCdefGHIjklMNOpqrsTUVwxyz",
+    "Telegram_Bot_Token_description": "رمز البوت لإرسال الرسائل",
     "Loading_data": "جارٍ تحميل البيانات",
     "No_Services_Assigned": "لا توجد خدمات مخصصة",
     "Served_By": "يخدمه",
@@ -471,5 +478,10 @@
     "City_placeholder": "اسم المدينة",
     "Region_placeholder": "اسم المنطقة أو الحي",
     "Distinctive_sign_placeholder": "بجوار علامة مميزة...",
-    "Open_Camera": "فتح الكاميرا"
+    "Open_Camera": "فتح الكاميرا",
+    "Education_and_Professional_Info": "المعلومات التعليمية والمهنية",
+    "Study": "الدراسة",
+    "Study_placeholder": "مثال: مهندس، جامعة القاهرة، علوم الحاسب (مفصولة بفواصل)",
+    "Skills": "المهارات",
+    "Skills_placeholder": "مثال: التدريس، الموسيقى، التصوير (مفصولة بفواصل)"
 }

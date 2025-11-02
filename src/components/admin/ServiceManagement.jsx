@@ -83,7 +83,11 @@ const ServiceManagement = () => {
     onePoundEqXpoints: 1,
     attendancePoints: 5,
     bibleStudyPoints: 1,
-    sendUserCredentials: false
+    sendUserCredentials: false,
+    telegram: {
+      chat_id: "",
+      botToken: ""
+    }
   })
 
   // Redux state
@@ -201,7 +205,11 @@ const ServiceManagement = () => {
       onePoundEqXpoints: 1,
       attendancePoints: 5,
       bibleStudyPoints: 1,
-      sendUserCredentials: false
+      sendUserCredentials: false,
+      telegram: {
+        chat_id: "",
+        botToken: ""
+      }
     })
     setEditingService(null)
   }
@@ -216,7 +224,8 @@ const ServiceManagement = () => {
         onePoundEqXpoints: service.onePoundEqXpoints,
         attendancePoints: service.attendancePoints,
         bibleStudyPoints: service.bibleStudyPoints,
-        sendUserCredentials: service.sendUserCredentials
+        sendUserCredentials: service.sendUserCredentials,
+        telegram: service.telegram || { chat_id: "", botToken: "" }
       })
     } else {
       resetForm()
@@ -529,6 +538,36 @@ const ServiceManagement = () => {
                 ...formData,
                 sendUserCredentials: event.currentTarget.checked
               })}
+            />
+
+            <Divider label={t("Telegram_Configuration")} labelPosition="center" mt="md" />
+
+            <TextInput
+              label={t("Telegram_Chat_ID")}
+              placeholder={t("Telegram_Chat_ID_placeholder")}
+              value={formData.telegram?.chat_id || ""}
+              onChange={(e) => setFormData({
+                ...formData,
+                telegram: {
+                  ...formData.telegram,
+                  chat_id: e.target.value
+                }
+              })}
+              description={t("Telegram_Chat_ID_description")}
+            />
+
+            <TextInput
+              label={t("Telegram_Bot_Token")}
+              placeholder={t("Telegram_Bot_Token_placeholder")}
+              value={formData.telegram?.botToken || ""}
+              onChange={(e) => setFormData({
+                ...formData,
+                telegram: {
+                  ...formData.telegram,
+                  botToken: e.target.value
+                }
+              })}
+              description={t("Telegram_Bot_Token_description")}
             />
 
             <Divider />
