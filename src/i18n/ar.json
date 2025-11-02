@@ -401,6 +401,7 @@
     "Loading_questions": "جاري تحميل الأسئلة",
     "No_questions_found_for_this_book": "لم يتم العثور على أسئلة لهذا الكتاب",
     "Please_select_a_service_from_header": "الرجاء اختيار خدمة من الأعلى",
+    "Please_select_service_first": "الرجاء اختيار خدمة أولاً",
     "Please_select_a_book_from_the_Service_Books_section": "الرجاء اختيار كتاب من قسم كتب الخدمة",
     "Service_Books": "كتب الخدمة",
     "Managing_content_for": "إدارة المحتوى لـ",

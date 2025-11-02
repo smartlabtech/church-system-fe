@@ -3,45 +3,67 @@ import {notifications} from "@mantine/notifications"
 import React, {useState} from "react"
 import {useTranslation} from "react-i18next"
 import {BiSend} from "react-icons/bi"
-import {useSelector} from "react-redux"
-
-import axios from "axios"
+import {useSelector, useDispatch} from "react-redux"
+import {sendMessage} from "../../actions/communicationActions"
 
 const AskHere = () => {
   const [t, i18n] = useTranslation()
+  const dispatch = useDispatch()
 
   const userLogin = useSelector((state) => state.userLogin)
   const {userInfo} = userLogin
 
+  const servedBy = useSelector((state) => state.servedBy)
+  const selectedService = servedBy?.service
+
   const [message, setMessage] = useState("")
+  const [isSending, setIsSending] = useState(false)
 
   const messageHandler = async () => {
-    if (message && userInfo?.user)
-      notifications.show({
-        id: "inquiry-send",
-        // title: "nquiry Status",
-        message: <Title size={"md"}>Sending Your Request</Title>,
-        autoClose: false,
-        loading: true,
-        withCloseButton: false
-      })
+    if (!message || !userInfo?.user || isSending) return
 
-    const chat_id = "936772629"
-    const botToken = "8188208271:AAF0j2N6Ypn9o4a5Z41nb7gJS_ZNU4RTplg"
-    if (message && userInfo?.user) {
-      await axios.post(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        chat_id: chat_id,
-        text: `${message}\nfrom:\n${userInfo.user._id}\n${userInfo.user}`
+    // Check if service is selected
+    if (!selectedService?._id) {
+      notifications.show({
+        message: <Title size={"md"}>{t("Please_select_service_first") || "Please select a service first"}</Title>,
+        autoClose: 3000,
+        color: "yellow"
       })
-      setMessage("")
+      return
     }
-    notifications.update({
+
+    setIsSending(true)
+    notifications.show({
       id: "inquiry-send",
-      message: <Title size={"md"}>Sent Successfully</Title>,
-      autoClose: 3000,
-      loading: false,
+      message: <Title size={"md"}>Sending Your Request</Title>,
+      autoClose: false,
+      loading: true,
       withCloseButton: false
     })
+
+    try {
+      await dispatch(sendMessage(message, selectedService._id))
+      setMessage("")
+      notifications.update({
+        id: "inquiry-send",
+        message: <Title size={"md"}>Sent Successfully</Title>,
+        autoClose: 3000,
+        loading: false,
+        withCloseButton: false,
+        color: "green"
+      })
+    } catch (error) {
+      notifications.update({
+        id: "inquiry-send",
+        message: <Title size={"md"}>Failed to send. Please try again.</Title>,
+        autoClose: 3000,
+        loading: false,
+        withCloseButton: true,
+        color: "red"
+      })
+    } finally {
+      setIsSending(false)
+    }
   }
 
   return (
@@ -85,8 +107,8 @@ const AskHere = () => {
         fontSize="2rem"
         onClick={() => messageHandler()}
         style={{
-          // transform: "scaleX(-1)",
-          cursor: "pointer" // Optional: change cursor on hover
+          cursor: isSending ? "not-allowed" : "pointer",
+          opacity: isSending ? 0.5 : 1
         }}
       />
     </Group>

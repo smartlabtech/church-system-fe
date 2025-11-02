@@ -106,6 +106,10 @@ import {
   serviceBookUpdateReducer,
   serviceBookDetailsReducer
 } from "./reducers/serviceBookReducers"
+import {
+  sendMessageReducer,
+  communicationHistoryReducer
+} from "./reducers/communicationReducers"
 
 const reducer = combineReducers({
   successAlert: successAlertReducer,
@@ -184,7 +188,9 @@ const reducer = combineReducers({
   serviceBookList: serviceBookListReducer,
   serviceBookCreate: serviceBookCreateReducer,
   serviceBookUpdate: serviceBookUpdateReducer,
-  serviceBookDetails: serviceBookDetailsReducer
+  serviceBookDetails: serviceBookDetailsReducer,
+  sendMessage: sendMessageReducer,
+  communicationHistory: communicationHistoryReducer
 })
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
