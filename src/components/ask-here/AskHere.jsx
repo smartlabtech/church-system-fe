@@ -16,6 +16,9 @@ const AskHere = () => {
   const servedBy = useSelector((state) => state.servedBy)
   const selectedService = servedBy?.service
 
+  // Get serviceId - try multiple possible locations
+  const serviceId = selectedService?.serviceId || selectedService?._id || servedBy?.userInfo?.serviceId
+
   const [message, setMessage] = useState("")
   const [isSending, setIsSending] = useState(false)
 
@@ -23,7 +26,7 @@ const AskHere = () => {
     if (!message || !userInfo?.user || isSending) return
 
     // Check if service is selected
-    if (!selectedService?._id) {
+    if (!serviceId) {
       notifications.show({
         message: <Title size={"md"}>{t("Please_select_service_first") || "Please select a service first"}</Title>,
         autoClose: 3000,
@@ -42,7 +45,7 @@ const AskHere = () => {
     })
 
     try {
-      await dispatch(sendMessage(message, selectedService._id))
+      await dispatch(sendMessage(message, serviceId))
       setMessage("")
       notifications.update({
         id: "inquiry-send",
