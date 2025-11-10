@@ -7,20 +7,17 @@
   padding: 0;
 }
 
-/* Only show scrollbar when needed */
+/* Ensure full height layout */
 html {
-  overflow: hidden;
   height: 100%;
 }
 
 body {
-  overflow: hidden;
   height: 100%;
 }
 
 #root {
   height: 100%;
-  overflow: hidden;
 }
 
 /* Prevent text overflow on small screens - break long words */

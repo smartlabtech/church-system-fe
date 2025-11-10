@@ -222,7 +222,7 @@ export function SimpleLayout() {
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "105vh",
+        height: "100vh",
         overflow: "hidden"
       }}
     >
