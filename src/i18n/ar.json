@@ -484,5 +484,21 @@
     "Study": "الدراسة",
     "Study_placeholder": "مثال: مهندس، جامعة القاهرة، علوم الحاسب (مفصولة بفواصل)",
     "Skills": "المهارات",
-    "Skills_placeholder": "مثال: التدريس، الموسيقى، التصوير (مفصولة بفواصل)"
+    "Skills_placeholder": "مثال: التدريس، الموسيقى، التصوير (مفصولة بفواصل)",
+    "Church_Management": "إدارة الكنيسة",
+    "Manage_church_settings_and_timezone": "إدارة إعدادات الكنيسة والمنطقة الزمنية",
+    "Manage_Church_Settings": "إدارة إعدادات الكنيسة",
+    "Church_Name": "اسم الكنيسة",
+    "Enter_church_name": "أدخل اسم الكنيسة",
+    "Timezone": "المنطقة الزمنية",
+    "Select_timezone": "اختر المنطقة الزمنية",
+    "Timezone_determines_when_daily_questions_are_active": "تحدد المنطقة الزمنية متى تكون الأسئلة اليومية نشطة",
+    "Timezone_Information": "معلومات المنطقة الزمنية",
+    "Timezone_affects_when_questions_are_active": "تؤثر المنطقة الزمنية على توقيت نشاط الأسئلة اليومية. تأكد من اختيار المنطقة الزمنية الصحيحة لموقع كنيستك",
+    "Add_Church": "إضافة كنيسة",
+    "Edit_Church": "تعديل الكنيسة",
+    "Church_created_successfully": "تم إنشاء الكنيسة بنجاح",
+    "Church_updated_successfully": "تم تحديث الكنيسة بنجاح",
+    "Loading_churches": "جاري تحميل الكنائس...",
+    "No_churches_found": "لم يتم العثور على كنائس"
 }

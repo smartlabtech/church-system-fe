@@ -28,7 +28,8 @@ import {
   FaChurch,
   FaBook,
   FaFingerprint,
-  FaBullhorn
+  FaBullhorn,
+  FaGlobe
 } from "react-icons/fa"
 import {MdDashboard} from "react-icons/md"
 import {GiCampingTent} from "react-icons/gi"
@@ -44,6 +45,7 @@ import StoreScreen from "../screens/store/StoreScreen"
 import ServiceManagementScreen from "../screens/ServiceManagementScreen"
 import ServantManagementScreen from "../screens/ServantManagementScreen"
 import BookManagementScreen from "../screens/BookManagementScreen"
+import ChurchManagementScreen from "../screens/ChurchManagementScreen"
 import BibleStudyScreen from "../screens/BibleStudyScreen"
 import AttendanceScreen from "../screens/AttendanceScreen"
 import AnnouncementsScreen from "../screens/AnnouncementsScreen"
@@ -180,6 +182,13 @@ export function SimpleLayout() {
       path: "/admin-panel/book-management",
       label: t("Book_Management"),
       icon: <FaBook size={18} />,
+      requireAuth: true,
+      requireAdmin: true
+    },
+    {
+      path: "/admin-panel/church-management",
+      label: t("Church_Management"),
+      icon: <FaGlobe size={18} />,
       requireAuth: true,
       requireAdmin: true
     }
@@ -707,6 +716,10 @@ export function SimpleLayout() {
                 <Route
                   path="/admin-panel/book-management"
                   element={<BookManagementScreen />}
+                />
+                <Route
+                  path="/admin-panel/church-management"
+                  element={<ChurchManagementScreen />}
                 />
               </Routes>
             </Box>

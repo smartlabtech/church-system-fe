@@ -465,5 +465,21 @@
     "Study": "Study",
     "Study_placeholder": "e.g., Engineer, Cairo University, Computer Science (separated by commas)",
     "Skills": "Skills",
-    "Skills_placeholder": "e.g., Teaching, Music, Photography (separated by commas)"
+    "Skills_placeholder": "e.g., Teaching, Music, Photography (separated by commas)",
+    "Church_Management": "Church Management",
+    "Manage_church_settings_and_timezone": "Manage church settings and timezone",
+    "Manage_Church_Settings": "Manage Church Settings",
+    "Church_Name": "Church Name",
+    "Enter_church_name": "Enter church name",
+    "Timezone": "Timezone",
+    "Select_timezone": "Select timezone",
+    "Timezone_determines_when_daily_questions_are_active": "Timezone determines when daily questions are active",
+    "Timezone_Information": "Timezone Information",
+    "Timezone_affects_when_questions_are_active": "Timezone affects when daily questions are active. Make sure to select the correct timezone for your church's location",
+    "Add_Church": "Add Church",
+    "Edit_Church": "Edit Church",
+    "Church_created_successfully": "Church created successfully",
+    "Church_updated_successfully": "Church updated successfully",
+    "Loading_churches": "Loading churches...",
+    "No_churches_found": "No churches found"
 }

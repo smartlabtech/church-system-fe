@@ -15,7 +15,7 @@ import {
   Title,
   ThemeIcon
 } from "@mantine/core"
-import { FaUsers, FaChurch, FaChartLine, FaCog, FaBook, FaList } from "react-icons/fa"
+import { FaUsers, FaChurch, FaChartLine, FaCog, FaBook, FaList, FaGlobe } from "react-icons/fa"
 
 function AdminScreen() {
   const navigate = useNavigate()
@@ -54,6 +54,14 @@ function AdminScreen() {
       color: "purple",
       path: "/admin-panel/book-management",
       stats: t("Manage_Books")
+    },
+    {
+      title: t("Church_Management"),
+      description: t("Manage_church_settings_and_timezone"),
+      icon: <FaGlobe size={24} />,
+      color: "teal",
+      path: "/admin-panel/church-management",
+      stats: t("Manage_Church_Settings")
     },
     {
       title: t("Reports_Analytics"),

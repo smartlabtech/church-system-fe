@@ -110,6 +110,12 @@ import {
   sendMessageReducer,
   communicationHistoryReducer
 } from "./reducers/communicationReducers"
+import {
+  churchListReducer,
+  churchCreateReducer,
+  churchUpdateReducer,
+  churchDeleteReducer
+} from "./reducers/churchReducers"
 
 const reducer = combineReducers({
   successAlert: successAlertReducer,
@@ -190,7 +196,11 @@ const reducer = combineReducers({
   serviceBookUpdate: serviceBookUpdateReducer,
   serviceBookDetails: serviceBookDetailsReducer,
   sendMessage: sendMessageReducer,
-  communicationHistory: communicationHistoryReducer
+  communicationHistory: communicationHistoryReducer,
+  churchList: churchListReducer,
+  churchCreate: churchCreateReducer,
+  churchUpdate: churchUpdateReducer,
+  churchDelete: churchDeleteReducer
 })
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
