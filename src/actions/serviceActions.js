@@ -127,15 +127,10 @@ export const updateService = (id, serviceData) => async (dispatch, getState) => 
       },
     }
 
-    // Add churchId from env
-    const dataWithChurchId = {
-      ...serviceData,
-      churchId: church_id,
-    }
-
+    // Don't send churchId during updates - it's immutable after creation
     const { data } = await axios.patch(
       `${base_url.replace('/ar', '/en')}/service/${id}`,
-      dataWithChurchId,
+      serviceData,
       config
     )
 
