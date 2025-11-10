@@ -133,7 +133,7 @@ export const updateService = (id, serviceData) => async (dispatch, getState) => 
       churchId: church_id,
     }
 
-    const { data } = await axios.put(
+    const { data } = await axios.patch(
       `${base_url.replace('/ar', '/en')}/service/${id}`,
       dataWithChurchId,
       config
