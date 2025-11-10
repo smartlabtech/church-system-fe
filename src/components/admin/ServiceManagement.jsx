@@ -84,6 +84,7 @@ const ServiceManagement = () => {
     attendancePoints: 5,
     bibleStudyPoints: 1,
     sendUserCredentials: false,
+    canAuthorizeServants: false,
     telegram: {
       chat_id: "",
       botToken: ""
@@ -206,6 +207,7 @@ const ServiceManagement = () => {
       attendancePoints: 5,
       bibleStudyPoints: 1,
       sendUserCredentials: false,
+      canAuthorizeServants: false,
       telegram: {
         chat_id: "",
         botToken: ""
@@ -225,6 +227,7 @@ const ServiceManagement = () => {
         attendancePoints: service.attendancePoints,
         bibleStudyPoints: service.bibleStudyPoints,
         sendUserCredentials: service.sendUserCredentials,
+        canAuthorizeServants: service.canAuthorizeServants || false,
         telegram: service.telegram || { chat_id: "", botToken: "" }
       })
     } else {
@@ -366,6 +369,7 @@ const ServiceManagement = () => {
                     <Table.Th style={{ minWidth: 120 }}>{t("Bible_Study_Points")}</Table.Th>
                     <Table.Th style={{ minWidth: 120 }}>{t("Money_to_Points")}</Table.Th>
                     <Table.Th style={{ minWidth: 120 }}>{t("Send_Credentials")}</Table.Th>
+                    <Table.Th style={{ minWidth: 140 }}>{t("Can_Authorize_Servants")}</Table.Th>
                     <Table.Th style={{ minWidth: 80 }}>{t("Actions")}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
@@ -417,6 +421,14 @@ const ServiceManagement = () => {
                           variant="light"
                         >
                           {service.sendUserCredentials ? t("Yes") : t("No")}
+                        </Badge>
+                      </Table.Td>
+                      <Table.Td>
+                        <Badge
+                          color={service.canAuthorizeServants ? "green" : "gray"}
+                          variant="light"
+                        >
+                          {service.canAuthorizeServants ? t("Yes") : t("No")}
                         </Badge>
                       </Table.Td>
                       <Table.Td>
@@ -537,6 +549,16 @@ const ServiceManagement = () => {
               onChange={(event) => setFormData({
                 ...formData,
                 sendUserCredentials: event.currentTarget.checked
+              })}
+            />
+
+            <Switch
+              label={t("Can_Authorize_Servants")}
+              description={t("Can_Authorize_Servants_Description")}
+              checked={formData.canAuthorizeServants}
+              onChange={(event) => setFormData({
+                ...formData,
+                canAuthorizeServants: event.currentTarget.checked
               })}
             />
 

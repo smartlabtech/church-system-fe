@@ -256,6 +256,8 @@
     "Money_to_Points_Ratio": "نسبة المال إلى النقاط",
     "Points_per_pound": "نقاط لكل جنيه",
     "Send_User_Credentials": "إرسال بيانات اعتماد المستخدم",
+    "Can_Authorize_Servants": "يمكن تفويض الخدام",
+    "Can_Authorize_Servants_Description": "السماح للخدام في هذه الخدمة بتفويض المستخدمين كخداميين (خدام بصلاحيات خاصة)",
     "Telegram_Configuration": "إعدادات تليجرام",
     "Telegram_Chat_ID": "معرف محادثة تليجرام",
     "Telegram_Chat_ID_placeholder": "مثال: -1001234567890",

@@ -237,6 +237,8 @@
     "Money_to_Points_Ratio": "Money to Points Ratio",
     "Points_per_pound": "Points per pound",
     "Send_User_Credentials": "Send User Credentials",
+    "Can_Authorize_Servants": "Can Authorize Servants",
+    "Can_Authorize_Servants_Description": "Allow servants in this service to authorize users as khademin (servants with special permissions)",
     "Telegram_Configuration": "Telegram Configuration",
     "Telegram_Chat_ID": "Telegram Chat ID",
     "Telegram_Chat_ID_placeholder": "e.g., -1001234567890",
