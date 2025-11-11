@@ -483,5 +483,11 @@
     "Church_created_successfully": "Church created successfully",
     "Church_updated_successfully": "Church updated successfully",
     "Loading_churches": "Loading churches...",
-    "No_churches_found": "No churches found"
+    "No_churches_found": "No churches found",
+    "My_QR_Code": "My QR Code",
+    "Scan_this_QR_code_for_quick_identification": "Scan this QR code for quick identification",
+    "User_ID": "User ID",
+    "Copied": "Copied",
+    "Copy_ID": "Copy ID",
+    "Show_QR_Code": "Show QR Code"
 }

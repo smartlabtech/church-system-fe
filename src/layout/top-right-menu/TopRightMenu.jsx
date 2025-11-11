@@ -69,7 +69,7 @@ const TopRightMenu = ({userInfo}) => {
   const [whyOpened, {open: openWhy, close: closeWhy}] = useDisclosure(false)
 
   return (
-    <Group>
+    <Group gap="md" align="center">
       {/* <Drawer
         zIndex={301}
         dir={t("Dir")}
@@ -94,6 +94,7 @@ const TopRightMenu = ({userInfo}) => {
       >
         <SystemPurpose />
       </Modal>
+
       <Menu shadow="md" width={200}>
         <Menu.Target>
           <Group style={{direction: "rtl"}}>
@@ -113,13 +114,6 @@ const TopRightMenu = ({userInfo}) => {
         </Menu.Target>
 
         <Menu.Dropdown dir={t("Dir")}>
-          {/* QR Code at the top */}
-          <Center py="md">
-            <QrCode qrCode={userInfo?.user?._id} />
-          </Center>
-
-          <Divider my="xs" />
-
           <Menu.Item
             leftSection={
               <FaImagePortrait style={{width: rem(14), height: rem(14)}} />
@@ -128,26 +122,6 @@ const TopRightMenu = ({userInfo}) => {
           >
             {t("Update_My_Data")}
           </Menu.Item>
-          {userInfo && userInfo?.user?.authorizedKhadem && (
-            <Menu.Item
-              leftSection={
-                <FaImagePortrait style={{width: rem(14), height: rem(14)}} />
-              }
-              onClick={() => navigate("/dashboard")}
-            >
-              {t("Dashboard")}
-            </Menu.Item>
-          )}
-          {userInfo && userInfo?.user?.role === "admin" && (
-            <Menu.Item
-              leftSection={
-                <BsGearWide style={{width: rem(14), height: rem(14)}} />
-              }
-              onClick={() => navigate("/admin-panel")}
-            >
-              {t("Admin")}
-            </Menu.Item>
-          )}
           <Menu.Item
             color="red"
             leftSection={
@@ -200,6 +174,9 @@ const TopRightMenu = ({userInfo}) => {
           </Stack>
         </Menu.Dropdown>
       </Menu>
+
+      {/* QR Code at the end of header */}
+      <QrCode qrCode={userInfo?.user?._id} />
     </Group>
   )
 }

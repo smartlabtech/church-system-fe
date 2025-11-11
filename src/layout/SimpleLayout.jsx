@@ -165,9 +165,9 @@ export function SimpleLayout() {
       requireAdmin: true
     },
     {
-      path: "/admin-panel/servant-management",
-      label: t("Servant_Management"),
-      icon: <FaUsers size={18} />,
+      path: "/admin-panel/church-management",
+      label: t("Church_Management"),
+      icon: <FaGlobe size={18} />,
       requireAuth: true,
       requireAdmin: true
     },
@@ -179,16 +179,16 @@ export function SimpleLayout() {
       requireAdmin: true
     },
     {
-      path: "/admin-panel/book-management",
-      label: t("Book_Management"),
-      icon: <FaBook size={18} />,
+      path: "/admin-panel/servant-management",
+      label: t("Servant_Management"),
+      icon: <FaUsers size={18} />,
       requireAuth: true,
       requireAdmin: true
     },
     {
-      path: "/admin-panel/church-management",
-      label: t("Church_Management"),
-      icon: <FaGlobe size={18} />,
+      path: "/admin-panel/book-management",
+      label: t("Book_Management"),
+      icon: <FaBook size={18} />,
       requireAuth: true,
       requireAdmin: true
     }
@@ -269,8 +269,8 @@ export function SimpleLayout() {
                 size="sm"
               />
 
-              {/* Logo */}
-              <UnstyledButton onClick={() => navigate("/")}>
+              {/* Logo - hidden on small screens */}
+              <UnstyledButton onClick={() => navigate("/")} visibleFrom="md">
                 <Group gap="xs">
                   <Box
                     style={{
@@ -282,11 +282,35 @@ export function SimpleLayout() {
                   >
                     <FaChurch size={20} />
                   </Box>
-                  <Text size="sm" fw={600} c="primary.6" visibleFrom="sm">
+                  <Text size="sm" fw={600} c="primary.6" visibleFrom="lg">
                     {t("lang") === "ar" ? ENV.CHURCH_NAME_AR : ENV.CHURCH_NAME_EN}
                   </Text>
                 </Group>
               </UnstyledButton>
+
+              {/* Service Selector beside logo */}
+              {!location.pathname.startsWith("/dashboard") &&
+                !location.pathname.startsWith("/admin-panel") &&
+                userInfo?.user?.servedBy?.length > 0 && (
+                  <Button
+                    size="xs"
+                    variant="subtle"
+                    onClick={() => dispatch({type: SET_SERVEDBYMODAL})}
+                  >
+                    {service?.name || t("Select_Service")}
+                  </Button>
+                )}
+
+              {/* Service Selector for servants (dashboard pages) beside logo */}
+              {location.pathname.startsWith("/dashboard") && (
+                <Button
+                  size="xs"
+                  variant="subtle"
+                  onClick={() => dispatch({type: SET_SERVANTINMODAL})}
+                >
+                  {selected?.service?.name || t("Select_Service")}
+                </Button>
+              )}
 
               {/* Desktop Navigation - only show on large screens */}
               <Group gap="xs" visibleFrom="lg">
@@ -379,34 +403,8 @@ export function SimpleLayout() {
               </Group>
             </Group>
 
-            {/* Right side - Service Selector, Language Toggle, User menu */}
+            {/* Right side - Language Toggle, User menu */}
             <Group gap="md">
-              {/* Service Selector for regular users (public pages) */}
-              {!location.pathname.startsWith("/dashboard") &&
-                !location.pathname.startsWith("/admin-panel") &&
-                userInfo?.user?.servedBy?.length > 0 && (
-                  <Button
-                    size="xs"
-                    variant="subtle"
-                    onClick={() => dispatch({type: SET_SERVEDBYMODAL})}
-                    visibleFrom="sm"
-                  >
-                    {service?.name || t("Select_Service")}
-                  </Button>
-                )}
-
-              {/* Service Selector for servants (dashboard pages) */}
-              {location.pathname.startsWith("/dashboard") && (
-                <Button
-                  size="xs"
-                  variant="subtle"
-                  onClick={() => dispatch({type: SET_SERVANTINMODAL})}
-                  visibleFrom="sm"
-                >
-                  {selected?.service?.name || t("Select_Service")}
-                </Button>
-              )}
-
               {/* Language Toggle */}
               {userInfo?.user && (
                 <Button
@@ -606,10 +604,11 @@ export function SimpleLayout() {
                 backgroundColor: isAdminArea ? "#fef9e7" : "white",
                 borderRight: "1px solid var(--mantine-color-gray-3)",
                 padding: "20px",
-                height: "calc(100vh - 60px)",
+                maxHeight: "calc(100vh - 60px)",
                 overflowY: "auto",
                 position: "sticky",
-                top: 60
+                top: 60,
+                alignSelf: "flex-start"
               }}
             >
               <Stack gap="xs">

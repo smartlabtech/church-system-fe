@@ -502,5 +502,11 @@
     "Church_created_successfully": "تم إنشاء الكنيسة بنجاح",
     "Church_updated_successfully": "تم تحديث الكنيسة بنجاح",
     "Loading_churches": "جاري تحميل الكنائس...",
-    "No_churches_found": "لم يتم العثور على كنائس"
+    "No_churches_found": "لم يتم العثور على كنائس",
+    "My_QR_Code": "رمز الاستجابة الخاص بي",
+    "Scan_this_QR_code_for_quick_identification": "امسح رمز الاستجابة للتعريف السريع",
+    "User_ID": "معرف المستخدم",
+    "Copied": "تم النسخ",
+    "Copy_ID": "نسخ المعرف",
+    "Show_QR_Code": "عرض رمز الاستجابة"
 }
