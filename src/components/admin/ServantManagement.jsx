@@ -92,12 +92,12 @@ const ServantManagement = () => {
         </Paper>
 
         {/* Servants Grid */}
-        <SimpleGrid cols={{ base: 1, sm: 1, lg: 2 }} spacing="lg">
+        <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
           {authorizedKhadem?.map((item, index) => (
             <Card
               key={index}
               shadow="sm"
-              padding="lg"
+              padding="md"
               radius="md"
               withBorder
               style={{
@@ -112,127 +112,125 @@ const ServantManagement = () => {
                 e.currentTarget.style.boxShadow = "var(--mantine-shadow-sm)"
               }}
             >
-              <Grid gutter="md" align="center">
-                {/* Avatar and Basic Info */}
-                <Grid.Col span={{ base: 12, sm: 4 }}>
-                  <Stack align="center" gap="sm">
-                    <Avatar
-                      src={item?.image}
-                      size="xl"
-                      radius="md"
-                      style={{ cursor: "pointer", border: "2px solid var(--mantine-color-primary-2)" }}
-                      onClick={() => showImage(item?.image)}
-                    />
-                    <Stack gap={2} align="center">
-                      <Text size="sm" fw={600}>
-                        {`${item?.firstName} ${item?.fatherName} ${item?.grandFaName || ""}`}
-                      </Text>
-                      <Badge
-                        color="primary"
-                        variant="light"
-                        style={{ cursor: "pointer" }}
-                        onClick={() =>
-                          dispatch({
-                            type: SET_ROLE_MODAL,
-                            payload: {
-                              listData: authorizedKhadem,
-                              index: index,
-                              indexData: item
-                            }
-                          })
-                        }
-                      >
-                        {item.role}
-                      </Badge>
-                    </Stack>
-                  </Stack>
-                </Grid.Col>
-
-                {/* Services Section */}
-                <Grid.Col span={{ base: 12, sm: 8 }}>
-                  <Stack gap="md">
-                    {/* Add Service Button */}
-                    <Button
-                      leftSection={<BsPlusSquareDotted size={18} />}
+              <Group align="flex-start" gap="sm" wrap="nowrap">
+                {/* Left Group: Avatar and Basic Info */}
+                <Stack align="center" gap="xs" style={{ minWidth: 100 }}>
+                  <Avatar
+                    src={item?.image}
+                    size="lg"
+                    radius="md"
+                    style={{ cursor: "pointer", border: "2px solid var(--mantine-color-primary-2)" }}
+                    onClick={() => showImage(item?.image)}
+                  />
+                  <Stack gap={4} align="center">
+                    <Text size="sm" fw={600} ta="center" lineClamp={2}>
+                      {`${item?.firstName} ${item?.fatherName} ${item?.grandFaName || ""}`}
+                    </Text>
+                    <Badge
+                      color="primary"
                       variant="light"
-                      fullWidth
+                      size="sm"
+                      style={{ cursor: "pointer" }}
                       onClick={() =>
                         dispatch({
-                          type: SET_ADD_TO_SERVICE_MODAL,
+                          type: SET_ROLE_MODAL,
                           payload: {
                             listData: authorizedKhadem,
                             index: index,
-                            servantName: `${item.firstName} ${item.fatherName} ${
-                              item?.grandFaName || ""
-                            }`,
-                            servantImage: item.image,
-                            servantId: item._id
+                            indexData: item
                           }
                         })
                       }
                     >
-                      {t("Add_to_Service")}
-                    </Button>
+                      {item.role}
+                    </Badge>
+                  </Stack>
+                </Stack>
 
-                    {/* Current Services */}
-                    <Stack gap="xs">
-                      <Text size="xs" c="dimmed" fw={600}>
-                        {t("Current_Services")}:
-                      </Text>
-                      {item.servantIn.length ? (
-                        <Group gap="xs">
-                          {item.servantIn.map((service, serviceIndex) => (
-                            <Badge
-                              key={serviceIndex}
-                              size="lg"
-                              color="accent"
-                              variant="filled"
-                              style={{ cursor: "pointer" }}
-                              onClick={() =>
-                                dispatch({
-                                  type: SET_UPDATE_SERVANT_SERVICE_MODAL,
-                                  payload: {
-                                    listData: authorizedKhadem,
-                                    index: index,
-                                    indexData: service,
-                                    servantName: `${item.firstName} ${
-                                      item.fatherName
-                                    } ${item?.grandFaName || ""}`,
-                                    servantImage: item.image,
-                                    servantRole: service.role
-                                  }
-                                })
-                              }
-                            >
-                              {service.name}
-                            </Badge>
-                          ))}
-                        </Group>
-                      ) : (
-                        <Badge color="red" variant="light" size="md">
-                          {t("No_Services_Assigned")}
-                        </Badge>
-                      )}
-                    </Stack>
+                {/* Right Group: Services Section */}
+                <Stack gap="xs" style={{ flex: 1 }}>
+                  {/* Add Service Button */}
+                  <Button
+                    leftSection={<BsPlusSquareDotted size={16} />}
+                    variant="light"
+                    size="xs"
+                    fullWidth
+                    onClick={() =>
+                      dispatch({
+                        type: SET_ADD_TO_SERVICE_MODAL,
+                        payload: {
+                          listData: authorizedKhadem,
+                          index: index,
+                          servantName: `${item.firstName} ${item.fatherName} ${
+                            item?.grandFaName || ""
+                          }`,
+                          servantImage: item.image,
+                          servantId: item._id
+                        }
+                      })
+                    }
+                  >
+                    {t("Add_to_Service")}
+                  </Button>
 
-                    {/* Served By Info */}
-                    {item.servedBy?.length > 0 && (
-                      <Stack gap="xs">
-                        <Text size="xs" c="dimmed" fw={600}>
-                          {t("Served_By")}:
-                        </Text>
-                        <Group gap="xs">
-                          {item.servedBy.map((service, idx) => (
-                            <Badge key={idx} color="gray" variant="light">
-                              {service.name}
-                            </Badge>
-                          ))}
-                        </Group>
-                      </Stack>
+                  {/* Current Services */}
+                  <Stack gap="xs">
+                    <Text size="xs" c="dimmed" fw={600}>
+                      {t("Current_Services")}:
+                    </Text>
+                    {item.servantIn.length ? (
+                      <Group gap="xs">
+                        {item.servantIn.map((service, serviceIndex) => (
+                          <Badge
+                            key={serviceIndex}
+                            size="sm"
+                            color="accent"
+                            variant="filled"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              dispatch({
+                                type: SET_UPDATE_SERVANT_SERVICE_MODAL,
+                                payload: {
+                                  listData: authorizedKhadem,
+                                  index: index,
+                                  indexData: service,
+                                  servantName: `${item.firstName} ${
+                                    item.fatherName
+                                  } ${item?.grandFaName || ""}`,
+                                  servantImage: item.image,
+                                  servantRole: service.role
+                                }
+                              })
+                            }
+                          >
+                            {service.name}
+                          </Badge>
+                        ))}
+                      </Group>
+                    ) : (
+                      <Badge color="red" variant="light" size="sm">
+                        {t("No_Services_Assigned")}
+                      </Badge>
                     )}
                   </Stack>
-                </Grid.Col>
-              </Grid>
+
+                  {/* Served By Info */}
+                  {item.servedBy?.length > 0 && (
+                    <Stack gap="xs">
+                      <Text size="xs" c="dimmed" fw={600}>
+                        {t("Served_By")}:
+                      </Text>
+                      <Group gap="xs">
+                        {item.servedBy.map((service, idx) => (
+                          <Badge key={idx} color="gray" variant="light" size="sm">
+                            {service.name}
+                          </Badge>
+                        ))}
+                      </Group>
+                    </Stack>
+                  )}
+                </Stack>
+              </Group>
             </Card>
           ))}
         </SimpleGrid>

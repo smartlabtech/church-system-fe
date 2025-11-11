@@ -508,5 +508,10 @@
     "User_ID": "معرف المستخدم",
     "Copied": "تم النسخ",
     "Copy_ID": "نسخ المعرف",
-    "Show_QR_Code": "عرض رمز الاستجابة"
+    "Show_QR_Code": "عرض رمز الاستجابة",
+    "Apply_Filters": "تطبيق الفلاتر",
+    "Sort_Options": "خيارات الترتيب",
+    "Choose_how_to_sort_books": "اختر كيفية ترتيب الكتب",
+    "Currently_sorted_by": "مرتب حاليًا حسب",
+    "Sort": "ترتيب"
 }

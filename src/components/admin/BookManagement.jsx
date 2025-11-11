@@ -19,9 +19,12 @@ import {
   ScrollArea,
   Divider,
   Select,
-  Grid
+  Grid,
+  Drawer,
+  Tooltip,
+  Box
 } from '@mantine/core'
-import { useMediaQuery } from '@mantine/hooks'
+import { useMediaQuery, useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import {
@@ -30,7 +33,8 @@ import {
   FaBook,
   FaSortAlphaDown,
   FaSortAlphaUp,
-  FaListOl
+  FaListOl,
+  FaFilter
 } from 'react-icons/fa'
 import {
   listBooks,
@@ -51,6 +55,7 @@ const BookManagement = () => {
   const isMobile = useMediaQuery('(max-width: 768px)')
 
   const [modalOpened, setModalOpened] = useState(false)
+  const [sortDrawerOpened, { open: openSortDrawer, close: closeSortDrawer }] = useDisclosure(false)
   const [editingBook, setEditingBook] = useState(null)
   const [sortConfig, setSortConfig] = useState({
     sortProperty: SORT_PROPERTY.NAME,
@@ -176,6 +181,7 @@ const BookManagement = () => {
         ? SORT_TYPE.DESCENDING
         : SORT_TYPE.ASCENDING
     }))
+    closeSortDrawer()
   }
 
   const formatDate = (dateString) => {
@@ -199,38 +205,65 @@ const BookManagement = () => {
                 {t('Manage_biblical_books')}
               </Text>
             </div>
+          </Group>
+        </Paper>
+
+        {/* Action Buttons - Professional floating design */}
+        <Group justify="space-between" align="center">
+          <Badge color="blue" variant="light" size="lg">
+            {t('Total')}: {books?.length || 0} {t('books')}
+          </Badge>
+
+          <Group gap="xs">
+            {/* Sort Button - Icon only on mobile, full button on desktop */}
+            <Box hiddenFrom="sm">
+              <Tooltip label={t('Sort')} position="bottom" withArrow>
+                <ActionIcon
+                  size="lg"
+                  variant="light"
+                  color="blue"
+                  onClick={openSortDrawer}
+                  radius="md"
+                >
+                  <FaFilter size={18} />
+                </ActionIcon>
+              </Tooltip>
+            </Box>
+            <Button
+              leftSection={<FaFilter />}
+              onClick={openSortDrawer}
+              variant="light"
+              visibleFrom="sm"
+              size="sm"
+            >
+              {t('Sort')}
+            </Button>
+
+            {/* Add Book Button - Icon only on mobile, full button on desktop */}
+            <Box hiddenFrom="sm">
+              <Tooltip label={t('Add_Book')} position="bottom" withArrow>
+                <ActionIcon
+                  size="lg"
+                  variant="filled"
+                  color="blue"
+                  onClick={() => handleOpenModal()}
+                  radius="md"
+                >
+                  <FaPlus size={18} />
+                </ActionIcon>
+              </Tooltip>
+            </Box>
             <Button
               leftSection={<FaPlus />}
               onClick={() => handleOpenModal()}
               variant="filled"
-              fullWidth={isMobile}
+              visibleFrom="sm"
+              size="sm"
             >
               {t('Add_Book')}
             </Button>
           </Group>
-        </Paper>
-
-        {/* Sort Controls */}
-        <Paper shadow="sm" radius="md" p="md" withBorder>
-          <Group wrap="wrap" gap="md">
-            <Text fw={600}>{t('Sort_by')}:</Text>
-            <Button
-              variant="light"
-              leftSection={
-                sortConfig.sortType === SORT_TYPE.ASCENDING
-                  ? <FaSortAlphaDown />
-                  : <FaSortAlphaUp />
-              }
-              onClick={handleSort}
-              fullWidth={isMobile}
-            >
-              {t('Name')} ({sortConfig.sortType === SORT_TYPE.ASCENDING ? t('A-Z') : t('Z-A')})
-            </Button>
-            <Badge color="blue" variant="light">
-              {t('Total')}: {books?.length || 0} {t('books')}
-            </Badge>
-          </Group>
-        </Paper>
+        </Group>
 
         {/* Books Table */}
         <Paper shadow="sm" radius="md" p="md" withBorder>
@@ -297,6 +330,55 @@ const BookManagement = () => {
             </ScrollArea>
           )}
         </Paper>
+
+        {/* Sort Drawer */}
+        <Drawer
+          opened={sortDrawerOpened}
+          onClose={closeSortDrawer}
+          title={
+            <Group gap="xs">
+              <FaFilter size={18} />
+              <Text fw={600}>{t('Sort_Options')}</Text>
+            </Group>
+          }
+          position="right"
+          size="md"
+          padding="md"
+        >
+          <Stack gap="md">
+            <Text size="sm" c="dimmed">
+              {t('Choose_how_to_sort_books')}
+            </Text>
+
+            <Button
+              variant={sortConfig.sortType === SORT_TYPE.ASCENDING ? "filled" : "light"}
+              fullWidth
+              leftSection={<FaSortAlphaDown />}
+              onClick={handleSort}
+              size="md"
+            >
+              {t('Name')} ({t('A-Z')})
+            </Button>
+
+            <Button
+              variant={sortConfig.sortType === SORT_TYPE.DESCENDING ? "filled" : "light"}
+              fullWidth
+              leftSection={<FaSortAlphaUp />}
+              onClick={handleSort}
+              size="md"
+            >
+              {t('Name')} ({t('Z-A')})
+            </Button>
+
+            <Divider />
+
+            <Group justify="center">
+              <Text size="sm" c="dimmed">
+                {t('Currently_sorted_by')}: {t('Name')} ({sortConfig.sortType === SORT_TYPE.ASCENDING ? t('A-Z') : t('Z-A')})
+              </Text>
+            </Group>
+          </Stack>
+        </Drawer>
 
         {/* Add/Edit Modal */}
         <Modal

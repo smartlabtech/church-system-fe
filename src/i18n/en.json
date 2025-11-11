@@ -489,5 +489,10 @@
     "User_ID": "User ID",
     "Copied": "Copied",
     "Copy_ID": "Copy ID",
-    "Show_QR_Code": "Show QR Code"
+    "Show_QR_Code": "Show QR Code",
+    "Apply_Filters": "Apply Filters",
+    "Sort_Options": "Sort Options",
+    "Choose_how_to_sort_books": "Choose how to sort books",
+    "Currently_sorted_by": "Currently sorted by",
+    "Sort": "Sort"
 }

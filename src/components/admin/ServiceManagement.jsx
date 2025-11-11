@@ -21,9 +21,11 @@ import {
   Container,
   ScrollArea,
   Divider,
-  Box
+  Box,
+  Drawer,
+  Tooltip
 } from "@mantine/core"
-import { useMediaQuery } from "@mantine/hooks"
+import { useMediaQuery, useDisclosure } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { useTranslation } from "react-i18next"
 import {
@@ -34,7 +36,8 @@ import {
   FaCalendarAlt,
   FaTrophy,
   FaBook,
-  FaUserCheck
+  FaUserCheck,
+  FaFilter
 } from "react-icons/fa"
 import {
   listServices,
@@ -68,6 +71,7 @@ const ServiceManagement = () => {
 
   const [modalOpened, setModalOpened] = useState(false)
   const [deleteModalOpened, setDeleteModalOpened] = useState(false)
+  const [filterDrawerOpened, { open: openFilterDrawer, close: closeFilterDrawer }] = useDisclosure(false)
   const [editingService, setEditingService] = useState(null)
   const [serviceToDelete, setServiceToDelete] = useState(null)
   const [filters, setFilters] = useState({})
@@ -252,11 +256,13 @@ const ServiceManagement = () => {
 
   const handleFilter = () => {
     dispatch(listServices(filters))
+    closeFilterDrawer()
   }
 
   const handleClearFilters = () => {
     setFilters({})
     dispatch(listServices())
+    closeFilterDrawer()
   }
 
   return (
@@ -276,76 +282,65 @@ const ServiceManagement = () => {
                 {t("Manage_church_services_and_points")}
               </Text>
             </div>
-            <Button
-              leftSection={<FaPlus />}
-              onClick={() => handleOpenModal()}
-              variant="filled"
-              fullWidth={isMobile}
-            >
-              {t("Add_Service")}
-            </Button>
           </Group>
         </Paper>
+
+        {/* Action Buttons - Professional floating design */}
+        <Group justify="flex-end" gap="xs">
+          {/* Filter Button - Icon only on mobile, full button on desktop */}
+          <Box hiddenFrom="sm">
+            <Tooltip label={t("Filters")} position="bottom" withArrow>
+              <ActionIcon
+                size="lg"
+                variant="light"
+                color="blue"
+                onClick={openFilterDrawer}
+                radius="md"
+              >
+                <FaFilter size={18} />
+              </ActionIcon>
+            </Tooltip>
+          </Box>
+          <Button
+            leftSection={<FaFilter />}
+            onClick={openFilterDrawer}
+            variant="light"
+            visibleFrom="sm"
+            size="sm"
+          >
+            {t("Filters")}
+          </Button>
+
+          {/* Add Service Button - Icon only on mobile, full button on desktop */}
+          <Box hiddenFrom="sm">
+            <Tooltip label={t("Add_Service")} position="bottom" withArrow>
+              <ActionIcon
+                size="lg"
+                variant="filled"
+                color="blue"
+                onClick={() => handleOpenModal()}
+                radius="md"
+              >
+                <FaPlus size={18} />
+              </ActionIcon>
+            </Tooltip>
+          </Box>
+          <Button
+            leftSection={<FaPlus />}
+            onClick={() => handleOpenModal()}
+            variant="filled"
+            visibleFrom="sm"
+            size="sm"
+          >
+            {t("Add_Service")}
+          </Button>
+        </Group>
 
         {/* Main Content with Sidebar */}
         <Grid gutter="lg" align="stretch">
           {/* Left Content - Services Management */}
           <Grid.Col span={{ base: 12, sm: 12, md: 8, lg: 9 }}>
             <Stack gap="lg" ref={servicesColumnRef}>
-              {/* Filters */}
-              <Paper shadow="sm" radius="md" p="md" withBorder>
-                <Stack gap="md">
-                  <Text fw={600}>{t("Filters")}</Text>
-                  <Grid gutter="sm">
-                    <Grid.Col span={{ base: 12, xs: 12, sm: 6, md: 4, lg: 3 }}>
-                      <TextInput
-                        placeholder={t("Service_Name")}
-                        value={filters.name || ""}
-                        onChange={(e) => setFilters({ ...filters, name: e.target.value })}
-                      />
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, xs: 6, sm: 6, md: 4, lg: 3 }}>
-                      <Select
-                        placeholder={t("Service_Day")}
-                        data={[
-                          { value: "", label: t("All") },
-                          ...WEEKDAYS
-                        ]}
-                        value={filters.serviceDay?.toString() || ""}
-                        onChange={(value) => setFilters({
-                          ...filters,
-                          serviceDay: value ? parseInt(value) : undefined
-                        })}
-                        clearable
-                      />
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, xs: 6, sm: 6, md: 4, lg: 3 }}>
-                      <Select
-                        placeholder={t("Service_Type")}
-                        data={[
-                          { value: "", label: t("All") },
-                          { value: "PRIMARY", label: t("Primary") },
-                          { value: "SECONDARY", label: t("Secondary") }
-                        ]}
-                        value={filters.type || ""}
-                        onChange={(value) => setFilters({ ...filters, type: value || undefined })}
-                        clearable
-                      />
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, xs: 12, sm: 6, md: 12, lg: 3 }}>
-                      <Group grow gap="xs">
-                        <Button onClick={handleFilter} variant="filled" size="sm">
-                          {t("Filter")}
-                        </Button>
-                        <Button onClick={handleClearFilters} variant="light" color="gray" size="sm">
-                          {t("Clear")}
-                        </Button>
-                      </Group>
-                    </Grid.Col>
-                  </Grid>
-                </Stack>
-              </Paper>
-
               {/* Services Table */}
               <Paper shadow="sm" radius="md" p="md" withBorder>
           {loading ? (
@@ -460,6 +455,69 @@ const ServiceManagement = () => {
             <ClassManagement selectedService={selectedService} height={servicesHeight} />
           </Grid.Col>
         </Grid>
+
+        {/* Filter Drawer */}
+        <Drawer
+          opened={filterDrawerOpened}
+          onClose={closeFilterDrawer}
+          title={
+            <Group gap="xs">
+              <FaFilter size={18} />
+              <Text fw={600}>{t("Filters")}</Text>
+            </Group>
+          }
+          position="right"
+          size="md"
+          padding="md"
+        >
+          <Stack gap="md">
+            <TextInput
+              label={t("Service_Name")}
+              placeholder={t("Service_Name")}
+              value={filters.name || ""}
+              onChange={(e) => setFilters({ ...filters, name: e.target.value })}
+            />
+
+            <Select
+              label={t("Service_Day")}
+              placeholder={t("Service_Day")}
+              data={[
+                { value: "", label: t("All") },
+                ...WEEKDAYS
+              ]}
+              value={filters.serviceDay?.toString() || ""}
+              onChange={(value) => setFilters({
+                ...filters,
+                serviceDay: value ? parseInt(value) : undefined
+              })}
+              clearable
+            />
+
+            <Select
+              label={t("Service_Type")}
+              placeholder={t("Service_Type")}
+              data={[
+                { value: "", label: t("All") },
+                { value: "PRIMARY", label: t("Primary") },
+                { value: "SECONDARY", label: t("Secondary") }
+              ]}
+              value={filters.type || ""}
+              onChange={(value) => setFilters({ ...filters, type: value || undefined })}
+              clearable
+            />
+
+            <Divider />
+
+            <Group grow gap="xs">
+              <Button onClick={handleFilter} variant="filled" leftSection={<FaFilter />}>
+                {t("Apply_Filters")}
+              </Button>
+              <Button onClick={handleClearFilters} variant="light" color="gray">
+                {t("Clear")}
+              </Button>
+            </Group>
+          </Stack>
+        </Drawer>
 
         {/* Add/Edit Modal */}
         <Modal
