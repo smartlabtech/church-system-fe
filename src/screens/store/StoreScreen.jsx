@@ -16,8 +16,12 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  Title
+  Title,
+  ActionIcon,
+  Tooltip,
+  Divider
 } from "@mantine/core"
+import {FaGift, FaShoppingBag, FaShoppingCart} from "react-icons/fa"
 import {notifications} from "@mantine/notifications"
 
 const StoreScreen = () => {
@@ -33,16 +37,38 @@ const StoreScreen = () => {
   const userLogin = useSelector((state) => state.userLogin)
   const {userInfo} = userLogin
 
+  const handleOrder = (item) => {
+    const userPoints = storeData?.userPoints || 0
+    if (userPoints < item.points) {
+      notifications.show({
+        id: "not-enough",
+        color: "red",
+        title: t("Not_Enough_Points"),
+        message: t("You_need_more_points").replace("{count}", item.points - userPoints),
+        autoClose: 4000
+      })
+    } else {
+      notifications.show({
+        id: "order-success",
+        color: "green",
+        title: t("Order_Successful"),
+        message: t("We_will_contact_you_soon"),
+        autoClose: 3000
+      })
+    }
+  }
+
   const items = storeData?.products?.map((item, index) => (
     <Card
       key={index}
       shadow="sm"
-      padding="lg"
+      padding="md"
       radius="md"
       withBorder
       style={{
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        cursor: "pointer"
+        transition: "all 0.2s ease",
+        display: "flex",
+        flexDirection: "column"
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-4px)"
@@ -62,44 +88,32 @@ const StoreScreen = () => {
         />
       </Card.Section>
 
-      <Stack gap="sm" mt="md">
-        <Text size="sm" fw={600} lineClamp={2}>
+      <Stack gap="xs" mt="md" style={{ flex: 1 }}>
+        <Text size="sm" fw={600} lineClamp={2} style={{ minHeight: "2.5rem" }}>
           {t("lang") === "ar" ? (item?.title?.ar || item?.title?.en || "Product") : (item?.title?.en || item?.title?.ar || "Product")}
         </Text>
 
-        <Group justify="space-between" align="center">
-          <Badge size="lg" color="secondary" variant="light" leftSection="🏆">
-            {item.points} {t("Points")}
+        <Divider />
+
+        <Group justify="space-between" align="center" mt="auto">
+          <Badge size="lg" color="blue" variant="light">
+            🏆 {item.points} {t("pt")}
           </Badge>
 
-          <Button
-            size="sm"
-            variant="filled"
-            color="primary"
-            onClick={(e) => {
-              e.stopPropagation()
-              const userPoints = storeData?.userPoints || 0
-              if (userPoints < item.points) {
-                notifications.show({
-                  id: "not-enough",
-                  color: "red",
-                  title: t("Not_Enough_Points"),
-                  message: t("You_need_more_points").replace("{count}", item.points - userPoints),
-                  autoClose: 4000
-                })
-              } else {
-                notifications.show({
-                  id: "order-success",
-                  color: "green",
-                  title: t("Order_Successful"),
-                  message: t("We_will_contact_you_soon"),
-                  autoClose: 3000
-                })
-              }
-            }}
-          >
-            {t("Order_Now")}
-          </Button>
+          <Tooltip label={t("Order_Now")} position="left" withArrow>
+            <ActionIcon
+              variant="filled"
+              color="green"
+              size="lg"
+              radius="md"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleOrder(item)
+              }}
+            >
+              <FaShoppingCart size={18} />
+            </ActionIcon>
+          </Tooltip>
         </Group>
       </Stack>
     </Card>
@@ -118,42 +132,50 @@ const StoreScreen = () => {
 
         {/* Header Section */}
         <Paper shadow="sm" radius="md" p="md" withBorder>
-          <Group justify="space-between">
-            <div>
-              <Title order={2} c="primary.6">
-                {t("Points_Store")}
-              </Title>
-              <Text size="sm" c="dimmed" mt="xs">
-                {t("Redeem_your_points_for_valuable_rewards")}
-              </Text>
-            </div>
-            {storeData?.userPoints !== undefined && (
-              <Badge size="xl" color="secondary" variant="filled">
-                {t("Your_Balance")}: {storeData.userPoints} {t("point")}
-              </Badge>
-            )}
-          </Group>
+          <Stack gap="sm">
+            <Group justify="space-between" wrap="wrap">
+              <div>
+                <Title order={2} c="primary.6">
+                  <Group gap="xs">
+                    <FaGift size={24} />
+                    {t("Points_Store")}
+                  </Group>
+                </Title>
+                <Text size="sm" c="dimmed" mt="xs">
+                  {t("Redeem_your_points_for_valuable_rewards")}
+                </Text>
+              </div>
+              {storeData?.userPoints !== undefined && (
+                <Badge size="xl" color="green" variant="filled" style={{ padding: "12px 20px" }}>
+                  💰 {storeData.userPoints} {t("pt")}
+                </Badge>
+              )}
+            </Group>
+          </Stack>
         </Paper>
 
         {/* Products Grid */}
         {loading ? (
-          <Stack align="center" py="xl">
+          <Stack align="center" py="xl" gap="md">
             <Loader size="lg" />
             <Text c="dimmed">{t("Loading_products")}...</Text>
           </Stack>
         ) : storeData?.products?.length > 0 ? (
-          <SimpleGrid cols={{base: 1, xs: 2, sm: 3, lg: 4}} spacing="lg">
+          <SimpleGrid cols={{base: 1, xs: 2, sm: 2, md: 3, lg: 4}} spacing="md">
             {items}
           </SimpleGrid>
         ) : (
-          <Paper shadow="sm" radius="md" p="xl" withBorder ta="center">
-            <Stack align="center" gap="md">
-              <Badge size="xl" color="gray" variant="light">
+          <Stack align="center" py="xl" gap="md">
+            <FaGift size={48} color="var(--mantine-color-gray-5)" />
+            <div style={{ textAlign: "center" }}>
+              <Text size="lg" fw={600} c="dimmed">
                 {t("No_Products_Available")}
-              </Badge>
-              <Text c="dimmed">{t("New_products_coming_soon")}</Text>
-            </Stack>
-          </Paper>
+              </Text>
+              <Text size="sm" c="dimmed" mt="xs">
+                {t("New_products_coming_soon")}
+              </Text>
+            </div>
+          </Stack>
         )}
       </Stack>
     </Container>

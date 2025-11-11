@@ -1,15 +1,15 @@
-import React from 'react'
-import { Container, Stack, Paper, Title, Text, Group } from '@mantine/core'
-import { useTranslation } from 'react-i18next'
-import { BiStore } from 'react-icons/bi'
-import Gifts from './gifts/Gifts'
-import { useSelector } from 'react-redux'
+import React from "react"
+import {Container, Stack, Paper, Title, Text, Group} from "@mantine/core"
+import {useTranslation} from "react-i18next"
+import {FaGift} from "react-icons/fa"
+import Gifts from "./gifts/Gifts"
+import {useSelector} from "react-redux"
 
 const StoreScreenDashboard = () => {
-  const { t } = useTranslation()
+  const {t} = useTranslation()
 
   const servantInList = useSelector((state) => state.servantInList)
-  const { selected } = servantInList
+  const {selected} = servantInList
 
   return (
     <Container size="xl" px="md">
@@ -20,21 +20,21 @@ const StoreScreenDashboard = () => {
             <div>
               <Title order={2} c="primary.6">
                 <Group gap="xs">
-                  <BiStore size={24} />
-                  {t('Store')}
+                  <FaGift size={24} />
+                  {t("Store_Management")}
                 </Group>
               </Title>
               <Text size="sm" c="dimmed" mt="xs">
-                {t('Church_store_and_rewards')}
+                {selected?.service
+                  ? `${t("Managing_products_for")}: ${selected.service.name}`
+                  : t("Manage_store_products_and_rewards")}
               </Text>
             </div>
           </Group>
         </Paper>
 
         {/* Store Content */}
-        <Paper shadow="sm" radius="md" p="xl" withBorder>
-          <Gifts selectedService={selected?.service} />
-        </Paper>
+        <Gifts selectedService={selected?.service} />
       </Stack>
     </Container>
   )

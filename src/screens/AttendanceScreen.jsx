@@ -36,9 +36,7 @@ const AttendanceScreen = () => {
         </Paper>
 
         {/* Attendance Content */}
-        <Paper shadow="sm" radius="md" p="xl" withBorder >
-          <ControlAttendanceCard userInfo={userInfo} />
-        </Paper>
+        <ControlAttendanceCard userInfo={userInfo} />
       </Stack>
     </Container>
   )

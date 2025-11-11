@@ -7,14 +7,28 @@ import {
   Button,
   Divider,
   Group,
-  Modal,
+  Drawer,
   SimpleGrid,
   Stack,
   Text,
-  TextInput
+  TextInput,
+  ActionIcon,
+  Tooltip,
+  Paper,
+  ThemeIcon,
+  Badge
 } from "@mantine/core"
 import {useMediaQuery} from "@mantine/hooks"
-import {FaFilter} from "react-icons/fa"
+import {
+  FaFilter,
+  FaMale,
+  FaFemale,
+  FaBirthdayCake,
+  FaCalendarAlt,
+  FaUserCheck,
+  FaCheckCircle,
+  FaGraduationCap
+} from "react-icons/fa"
 
 function UsersFiltersModal({searchHandler, classId}) {
   const dispatch = useDispatch()
@@ -134,103 +148,214 @@ function UsersFiltersModal({searchHandler, classId}) {
 
   return (
     <>
-      <FaFilter onClick={() => setShow(true)} />
-      <Modal
+      <Tooltip label={t("Filters")} position="bottom" withArrow>
+        <ActionIcon
+          variant="light"
+          color="blue"
+          size="lg"
+          radius="md"
+          onClick={() => setShow(true)}
+        >
+          <FaFilter size={18} />
+        </ActionIcon>
+      </Tooltip>
+
+      <Drawer
         opened={show}
         onClose={() => setShow(false)}
+        position="right"
         size="lg"
-        fullScreen={isMobile}
-        title={t("Filter_Options")}
-        centered
+        title={
+          <Group gap="xs">
+            <ThemeIcon size="lg" radius="md" variant="light" color="blue">
+              <FaFilter size={18} />
+            </ThemeIcon>
+            <Text size="lg" fw={600}>{t("Filter_Options")}</Text>
+          </Group>
+        }
+        padding="md"
       >
-        <Modal.Body style={{direction: t("Dir"), padding: "1rem"}}>
-          <Stack gap="md">
-            <Group justify="center">
-              <Button
-                variant={filters?.male ? "gradient" : "outline"}
-                onClick={() => changeMaleStatus()}
-              >
-                {t("Male")}
-              </Button>
-              <Button
-                variant={filters?.female ? "gradient" : "outline"}
-                onClick={() => changeFemaleStatus()}
-              >
-                {t("Female")}
-              </Button>
-            </Group>
-            <Divider />
+        <Stack gap="lg" style={{direction: t("Dir")}}>
+          {/* Gender Filter Section */}
+          <Paper p="md" radius="md" withBorder>
+            <Stack gap="sm">
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="md" variant="light" color="blue">
+                  <FaMale size={12} />
+                </ThemeIcon>
+                <Text size="sm" fw={600} c="dimmed">{t("Gender")}</Text>
+              </Group>
+              <Group grow>
+                <Button
+                  variant={filters?.male ? "filled" : "light"}
+                  color={filters?.male ? "blue" : "gray"}
+                  onClick={() => changeMaleStatus()}
+                  leftSection={<FaMale size={14} />}
+                  styles={(theme) => ({
+                    root: {
+                      transition: 'all 0.2s ease'
+                    }
+                  })}
+                >
+                  {t("Male")}
+                </Button>
+                <Button
+                  variant={filters?.female ? "filled" : "light"}
+                  color={filters?.female ? "pink" : "gray"}
+                  onClick={() => changeFemaleStatus()}
+                  leftSection={<FaFemale size={14} />}
+                  styles={(theme) => ({
+                    root: {
+                      transition: 'all 0.2s ease'
+                    }
+                  })}
+                >
+                  {t("Female")}
+                </Button>
+              </Group>
+            </Stack>
+          </Paper>
 
-            <Stack align="center">
-              <Text fw={500}>{t("His_Birthday_In")}</Text>
-              <SimpleGrid cols={{base: 3, xs: 4, sm: 6, md: 12}} spacing="xs" w="100%">
+          {/* Birthday Month Filter Section */}
+          <Paper p="md" radius="md" withBorder>
+            <Stack gap="sm">
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="md" variant="light" color="pink">
+                  <FaBirthdayCake size={12} />
+                </ThemeIcon>
+                <Text size="sm" fw={600} c="dimmed">{t("His_Birthday_In")}</Text>
+                {filters?.birthdayMonthes?.some(m => m) && (
+                  <Badge size="sm" color="pink" variant="light">
+                    {filters.birthdayMonthes.filter(m => m).length}
+                  </Badge>
+                )}
+              </Group>
+              <SimpleGrid cols={{base: 3, xs: 4, sm: 6}} spacing="xs">
                 {filters?.birthdayMonthes?.map((month, index) => (
                   <Button
-                    m={0}
-                    p={6}
-                    size="xs"
                     key={index}
-                    variant={month ? "gradient" : "outline"}
+                    size="xs"
+                    variant={month ? "filled" : "light"}
+                    color={month ? "pink" : "gray"}
                     onClick={() => updateBirthdayMonth(index)}
+                    styles={(theme) => ({
+                      root: {
+                        transition: 'all 0.2s ease'
+                      }
+                    })}
                   >
                     {t(index + 1)}
                   </Button>
                 ))}
               </SimpleGrid>
             </Stack>
-            <Divider />
+          </Paper>
 
-            <Stack align="center">
-              <Text fw={500}>{t(`Last_Attendance_From_X_Weeks`)}</Text>
-              <SimpleGrid cols={{base: 3, xs: 3, sm: 6}} spacing="xs" w="100%">
+          {/* Last Attendance Filter Section */}
+          <Paper p="md" radius="md" withBorder>
+            <Stack gap="sm">
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="md" variant="light" color="green">
+                  <FaCalendarAlt size={12} />
+                </ThemeIcon>
+                <Text size="sm" fw={600} c="dimmed">{t(`Last_Attendance_From_X_Weeks`)}</Text>
+                {filters?.lastAttendance && (
+                  <Badge size="sm" color="green" variant="light">
+                    {filters.lastAttendance} {t("weeks")}
+                  </Badge>
+                )}
+              </Group>
+              <SimpleGrid cols={{base: 3, xs: 3, sm: 6}} spacing="xs">
                 {Array(6)
                   .fill(0)
                   .map((val, index) => (
                     <Button
-                      m={0}
-                      p={6}
                       key={index}
+                      size="xs"
                       variant={
                         filters?.lastAttendance == index + 1
-                          ? "gradient"
-                          : "outline"
+                          ? "filled"
+                          : "light"
+                      }
+                      color={
+                        filters?.lastAttendance == index + 1
+                          ? "green"
+                          : "gray"
                       }
                       onClick={() => updateLastAttendance(index)}
+                      styles={(theme) => ({
+                        root: {
+                          transition: 'all 0.2s ease'
+                        }
+                      })}
                     >
                       {t(index + 1)}
                     </Button>
                   ))}
               </SimpleGrid>
             </Stack>
-            <Divider />
+          </Paper>
 
-            <Stack align="center">
-              <Text fw={500}>{t(`Last_Followup_From_X_Monthes`)}</Text>
-              <SimpleGrid cols={{base: 3, xs: 3, sm: 6}} spacing="xs" w="100%">
+          {/* Last Follow-up Filter Section */}
+          <Paper p="md" radius="md" withBorder>
+            <Stack gap="sm">
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="md" variant="light" color="orange">
+                  <FaUserCheck size={12} />
+                </ThemeIcon>
+                <Text size="sm" fw={600} c="dimmed">{t(`Last_Followup_From_X_Monthes`)}</Text>
+                {filters?.lastFollowup && (
+                  <Badge size="sm" color="orange" variant="light">
+                    {filters.lastFollowup} {t("months")}
+                  </Badge>
+                )}
+              </Group>
+              <SimpleGrid cols={{base: 3, xs: 3, sm: 6}} spacing="xs">
                 {Array(6)
                   .fill(0)
                   .map((val, index) => (
                     <Button
-                      m={0}
-                      p={6}
                       key={index}
+                      size="xs"
                       variant={
                         filters?.lastFollowup == index + 1
-                          ? "gradient"
-                          : "outline"
+                          ? "filled"
+                          : "light"
+                      }
+                      color={
+                        filters?.lastFollowup == index + 1
+                          ? "orange"
+                          : "gray"
                       }
                       onClick={() => updateLastFollowUp(index)}
+                      styles={(theme) => ({
+                        root: {
+                          transition: 'all 0.2s ease'
+                        }
+                      })}
                     >
                       {t(index + 1)}
                     </Button>
                   ))}
               </SimpleGrid>
             </Stack>
-            <Divider />
+          </Paper>
 
-            <Stack align="center">
-              <Text fw={500}>{t("Avalability")}</Text>
-              <SimpleGrid cols={{base: 1, xs: 2, sm: 3, md: 5}} spacing="xs" w="100%">
+          {/* Availability Status Filter Section */}
+          <Paper p="md" radius="md" withBorder>
+            <Stack gap="sm">
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="md" variant="light" color="teal">
+                  <FaCheckCircle size={12} />
+                </ThemeIcon>
+                <Text size="sm" fw={600} c="dimmed">{t("Avalability")}</Text>
+                {filters?.status && (
+                  <Badge size="sm" color="teal" variant="light">
+                    {t(filters.status)}
+                  </Badge>
+                )}
+              </Group>
+              <SimpleGrid cols={{base: 1, xs: 2, sm: 3}} spacing="xs">
                 {[
                   "IN_CHURCH",
                   "OTHER_CHURCH",
@@ -240,63 +365,106 @@ function UsersFiltersModal({searchHandler, classId}) {
                 ].map((val, index) => (
                   <Button
                     key={index}
-                    size="sm"
-                    variant={filters?.status == val ? "gradient" : "outline"}
+                    size="xs"
+                    variant={filters?.status == val ? "filled" : "light"}
+                    color={filters?.status == val ? "teal" : "gray"}
                     onClick={() => updateStatus(val)}
-                    styles={{
+                    styles={(theme) => ({
                       root: {
-                        fontSize: '0.75rem',
-                        padding: '0.5rem'
+                        transition: 'all 0.2s ease'
                       }
-                    }}
+                    })}
                   >
                     {t(val)}
                   </Button>
                 ))}
               </SimpleGrid>
             </Stack>
-            <Divider />
+          </Paper>
 
-            <Stack align="center">
-              <Text fw={500}>{t("Education_and_Professional_Info")}</Text>
-              <SimpleGrid cols={{base: 1, sm: 2}} spacing="xs" w="100%">
+          {/* Education & Skills Filter Section */}
+          <Paper p="md" radius="md" withBorder>
+            <Stack gap="sm">
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="md" variant="light" color="violet">
+                  <FaGraduationCap size={12} />
+                </ThemeIcon>
+                <Text size="sm" fw={600} c="dimmed">{t("Education_and_Professional_Info")}</Text>
+                {(filters?.study || filters?.skill) && (
+                  <Badge size="sm" color="violet" variant="light">
+                    {[filters?.study, filters?.skill].filter(Boolean).length}
+                  </Badge>
+                )}
+              </Group>
+              <SimpleGrid cols={{base: 1, sm: 2}} spacing="xs">
                 <TextInput
                   label={t("Study")}
                   placeholder={t("Study_placeholder")}
                   value={filters?.study || ""}
                   onChange={(e) => updateStudy(e.target.value)}
+                  styles={(theme) => ({
+                    input: {
+                      transition: 'all 0.2s ease'
+                    }
+                  })}
                 />
                 <TextInput
                   label={t("Skills")}
                   placeholder={t("Skills_placeholder")}
                   value={filters?.skill || ""}
                   onChange={(e) => updateSkill(e.target.value)}
+                  styles={(theme) => ({
+                    input: {
+                      transition: 'all 0.2s ease'
+                    }
+                  })}
                 />
               </SimpleGrid>
             </Stack>
-            <Divider />
+          </Paper>
 
-            <Group justify="center" gap="md" mt="md">
-              <Button
-                onClick={() => setFilter()}
-                variant="filled"
-                fullWidth={isSmallScreen}
-                flex={isSmallScreen ? undefined : 1}
-              >
-                {t("Set_Filter")}
-              </Button>
+          {/* Action Buttons */}
+          <Paper p="md" radius="md" withBorder style={{ marginTop: 'auto' }}>
+            <Group justify="space-between" gap="md">
               <Button
                 onClick={() => clearFilter()}
                 variant="light"
-                fullWidth={isSmallScreen}
-                flex={isSmallScreen ? undefined : 1}
+                color="gray"
+                flex={1}
+                size="md"
+                styles={(theme) => ({
+                  root: {
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      transform: 'translateY(-1px)'
+                    }
+                  }
+                })}
               >
                 {t("Clear_Filter")}
               </Button>
+              <Button
+                onClick={() => setFilter()}
+                variant="gradient"
+                gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+                leftSection={<FaFilter size={14} />}
+                flex={1}
+                size="md"
+                styles={(theme) => ({
+                  root: {
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      transform: 'translateY(-1px)'
+                    }
+                  }
+                })}
+              >
+                {t("Set_Filter")}
+              </Button>
             </Group>
-          </Stack>
-        </Modal.Body>
-      </Modal>
+          </Paper>
+        </Stack>
+      </Drawer>
     </>
   )
 }

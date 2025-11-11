@@ -15,7 +15,10 @@ import {
   Title,
   useMantineTheme,
   Anchor,
-  Modal
+  Modal,
+  ActionIcon,
+  Badge,
+  SimpleGrid
 } from "@mantine/core"
 
 import UserMoreModal from "./UserMoreModal"
@@ -160,7 +163,7 @@ export const UsersList = ({classId, selectedService}) => {
   }
 
   return (
-    <Stack gap="md" style={{ width: '100%' }}>
+    <>
       <Modal
         opened={opened}
         onClose={close}
@@ -200,35 +203,33 @@ export const UsersList = ({classId, selectedService}) => {
           </Group>
         </Stack>
       </Modal>
-      {users?.map((user, index) => (
+
+      <SimpleGrid cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 3 }} spacing="md">
+        {users?.map((user, index) => (
         <Card
           key={index}
           shadow="sm"
-          radius={"lg"}
+          radius="md"
           withBorder
           style={{direction: t("Dir")}}
-          w="100%"
-          px={"xs"}
+          padding="sm"
         >
           <Group style={{display: "flex"}}>
             <Group flex={1.5}>
               <Avatar
                 src={user?.userDetails?.image}
-                size={"2.7rem"}
+                size="md"
                 onClick={() => showImage(user?.userDetails?.image || avatar)}
                 style={{cursor: "pointer"}}
               />
               <Stack gap={0}>
-                <Text weight={500} size="sm">{`
-                  ${user?.userDetails?.firstName} ${
-                  user?.userDetails?.fatherName
-                } ${user?.userDetails?.familyName || ""}`}</Text>
-                <Group gap={"0.5rem"}>
+                <Text fw={500} size="sm">{`${user?.userDetails?.firstName} ${user?.userDetails?.fatherName} ${user?.userDetails?.familyName || ""}`}</Text>
+                <Group gap="xs">
                   {user?.userDetails?.authorizedKhadem && (
                     <>
-                      <Title size="xs" c="red" fw={"bolder"}>
+                      <Text size="xs" c="red" fw="bold">
                         {t("Khadem")}
-                      </Title>
+                      </Text>
                       <Divider orientation="vertical" />
                     </>
                   )}
@@ -236,8 +237,7 @@ export const UsersList = ({classId, selectedService}) => {
                   {(month - user?.userDetails?.birthday?.month == 0 ||
                     month - user?.userDetails?.birthday?.month == 1) && (
                     <>
-                      <LiaBirthdayCakeSolid size={"1rem"} color="red" />
-
+                      <LiaBirthdayCakeSolid size={14} color="red" />
                       <Divider orientation="vertical" />
                     </>
                   )}
@@ -260,19 +260,23 @@ export const UsersList = ({classId, selectedService}) => {
               </Stack>
               <Divider orientation="vertical" />
             </Group>
-            <Group gap={"lg"}>
+            <Group gap="sm">
               <PhoneNumbersModal userDetails={user?.userDetails} />
-              <FaShareAlt
-                size={"1rem"}
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="sm"
                 onClick={() => onShare(user.userDetails)}
-              />
+              >
+                <FaShareAlt size={14} />
+              </ActionIcon>
             </Group>
           </Group>
-          <Divider my={"xs"} />
+          <Divider my="xs" />
 
-          <Group justify="space-between" m={0} p={0} gap={0}>
-            <Stack gap={0}>
-              <Group gap={"10px"} justify="space-between" p={0} m={0}>
+          <Group justify="space-between" m={0} p={0}>
+            <Stack gap={2}>
+              <Group gap="sm" justify="space-between" p={0} m={0}>
                 <Text size="xs" c="dimmed">
                   {`${t("Attendance")}: ${
                     user?.userDetails?.more?.lastAttendance?.split("T")[0] ||
@@ -302,13 +306,14 @@ export const UsersList = ({classId, selectedService}) => {
             </Group>
           </Group>
         </Card>
-      ))}
+        ))}
+      </SimpleGrid>
 
       <PhotoModal
         userImage={userImage}
         status={status}
         onHide={() => setStatus(false)}
       />
-    </Stack>
+    </>
   )
 }

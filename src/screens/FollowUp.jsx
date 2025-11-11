@@ -180,15 +180,40 @@ function FollowUpScreen() {
           </Group>
         </Paper>
 
-        {/* Follow Up Content */}
-        <Paper shadow="sm" radius="md" p="xl" withBorder>
-          <Stack align="center">
-            {/* Filters and Class Selection */}
-            <Group
-              justify="space-between"
-              style={{display: "flex", width: "100%"}}
-              gap={10}
-            >
+        {/* Filters and Controls */}
+        <Paper shadow="sm" radius="md" p="md" withBorder>
+          <Group justify="space-between" gap="sm" wrap="wrap">
+            {selectedService?.classes?.length > 0 && (
+              <Select
+                style={{ flex: 1, minWidth: 200 }}
+                data={selectedService.classes.map((classData) => ({
+                  label: classData.name,
+                  value: classData._id
+                }))}
+                value={classId}
+                onChange={searchHandler}
+                placeholder={t("Select_Class")}
+              />
+            )}
+
+            <Group gap="xs">
+              <UsersFiltersModal
+                searchHandler={searchHandler}
+                classId={classId}
+              />
+
+              <ActionIcon
+                variant="light"
+                color="orange"
+                size="lg"
+                radius="md"
+                onClick={assignedHandler}
+                disabled={!classId}
+                title={t("Assigned_To_Me")}
+              >
+                <FaWandMagicSparkles size={18} />
+              </ActionIcon>
+
               <Menu
                 transitionProps={{transition: "pop"}}
                 withArrow
@@ -196,8 +221,8 @@ function FollowUpScreen() {
                 withinPortal
               >
                 <Menu.Target>
-                  <ActionIcon variant="subtle" color="gray">
-                    <BiDotsVertical size={"1.3rem"} stroke={1.5} />
+                  <ActionIcon variant="subtle" color="gray" size="lg">
+                    <BiDotsVertical size={20} />
                   </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
@@ -205,7 +230,7 @@ function FollowUpScreen() {
                     dir={t("Dir")}
                     onClick={reportHandler}
                     disabled={!classId}
-                    leftSection={<BiSolidReport size={"1.5rem"} stroke={1.5} />}
+                    leftSection={<BiSolidReport size={16} />}
                   >
                     {t("Send_To_Email")}
                   </Menu.Item>
@@ -214,51 +239,18 @@ function FollowUpScreen() {
                     dir={t("Dir")}
                     onClick={attendanceReportHandler}
                     disabled={!classId}
-                    leftSection={<BiSolidReport size={"1.5rem"} stroke={1.5} />}
+                    leftSection={<BiSolidReport size={16} />}
                   >
                     {t("Attendance_Report")}
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
-
-              {selectedService?.classes?.length > 0 && (
-                <Select
-                  flex={2}
-                  data={selectedService.classes.map((classData) => ({
-                    label: classData.name,
-                    value: classData._id
-                  }))}
-                  value={classId}
-                  onChange={searchHandler}
-                  placeholder={t("Select_Class")}
-                />
-              )}
-              <UsersFiltersModal
-                searchHandler={searchHandler}
-                classId={classId}
-              />
-              {/* <BiSearch
-          size={"1.5rem"}
-          onClick={searchHandler}
-          disabled={!classId}
-          color={!classId ? "gray" : "green"}
-        /> */}
-
-              <Divider orientation="vertical" />
-              <FaWandMagicSparkles
-                onClick={assignedHandler}
-                size={"1.5rem"}
-                color="#ff7e5f"
-                style={{
-                  cursor: "pointer"
-                }}
-              />
             </Group>
-
-            {/* User List */}
-            <UsersList classId={classId} selectedService={selectedService} />
-          </Stack>
+          </Group>
         </Paper>
+
+        {/* User List */}
+        <UsersList classId={classId} selectedService={selectedService} />
       </Stack>
     </Container>
   )

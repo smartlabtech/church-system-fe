@@ -6,7 +6,6 @@ import {
   Stack,
   Text,
   SimpleGrid,
-  Card,
   Image,
   Badge,
   Loader,
@@ -14,20 +13,16 @@ import {
   ActionIcon,
   Paper,
   Title,
-  Menu,
   TextInput,
   Box,
-  Container,
   Divider,
-  Tooltip,
-  rem
+  Tooltip
 } from "@mantine/core"
 import {useTranslation} from "react-i18next"
 import {
   FaPlus,
   FaEdit,
   FaTrash,
-  FaEllipsisV,
   FaSearch,
   FaGift,
   FaTag,
@@ -120,13 +115,13 @@ const Gifts = ({selectedService}) => {
               height: 120,
               borderRadius: "50%",
               background:
-                "linear-gradient(135deg, var(--mantine-color-blue-1) 0%, var(--mantine-color-cyan-1) 100%)",
+                "linear-gradient(135deg, var(--mantine-color-primary-1) 0%, var(--mantine-color-accent-1) 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center"
             }}
           >
-            <FaGift size={48} color="var(--mantine-color-blue-6)" />
+            <FaGift size={48} color="var(--mantine-color-primary-6)" />
           </Box>
           <Title order={3} c="dimmed" ta="center">
             {t("Please_select_a_service_to_manage_products")}
@@ -148,302 +143,296 @@ const Gifts = ({selectedService}) => {
   }
 
   return (
-    <Container size="xl" px={0}>
-      <Stack gap="md">
-        {/* Header Section - Cleaner Design */}
-        <Stack gap="sm">
-          <Group justify="space-between" align="center" gap="sm">
-            <TextInput
-              placeholder={t("Search_products")}
-              leftSection={<FaSearch size={16} />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+    <Stack gap="md">
+      {/* Filters and Controls */}
+      <Paper shadow="sm" radius="md" p="md" withBorder>
+        <Group justify="space-between" align="center" gap="sm" wrap="wrap">
+          <TextInput
+            placeholder={t("Search_products")}
+            leftSection={<FaSearch size={16} />}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            size="md"
+            radius="md"
+            style={{flex: 1, minWidth: 0, maxWidth: 400}}
+          />
+          <Group gap="xs">
+            <Button
+              leftSection={<FaPlus size={16} />}
+              onClick={handleAdd}
               size="md"
               radius="md"
-              style={{ flex: 1, minWidth: 0, maxWidth: 400 }}
-            />
-            <Group gap="xs">
-              <Button
-                leftSection={<FaPlus size={16} />}
-                onClick={handleAdd}
-                size="md"
-                radius="md"
-                visibleFrom="sm"
-              >
-                {t("Add_Product")}
-              </Button>
+              visibleFrom="sm"
+            >
+              {t("Add_Product")}
+            </Button>
+            <ActionIcon
+              size="lg"
+              onClick={handleAdd}
+              color="primary"
+              variant="filled"
+              radius="md"
+              hiddenFrom="sm"
+            >
+              <FaPlus size={16} />
+            </ActionIcon>
+          </Group>
+        </Group>
+      </Paper>
+
+      {/* Product Count and View Toggle */}
+      <Paper shadow="sm" radius="md" p="md" withBorder>
+        <Group justify="space-between" align="center">
+          <Text size="sm" c="dimmed">
+            {filteredProducts?.length || 0} {t("Products")}
+          </Text>
+          <Group gap="xs" visibleFrom="sm">
+            <Tooltip label={t("Grid_View")}>
               <ActionIcon
                 size="lg"
-                onClick={handleAdd}
-                color="blue"
-                variant="filled"
+                variant={viewMode === "grid" ? "filled" : "light"}
+                color="primary"
+                onClick={() => setViewMode("grid")}
                 radius="md"
-                hiddenFrom="sm"
               >
-                <FaPlus size={18} />
+                <BiGridSmall size={20} />
               </ActionIcon>
-            </Group>
+            </Tooltip>
+            <Tooltip label={t("List_View")}>
+              <ActionIcon
+                size="lg"
+                variant={viewMode === "list" ? "filled" : "light"}
+                color="primary"
+                onClick={() => setViewMode("list")}
+                radius="md"
+              >
+                <BiListUl size={20} />
+              </ActionIcon>
+            </Tooltip>
           </Group>
+        </Group>
+      </Paper>
 
-          {/* Product Count and View Toggle */}
-          <Group justify="space-between" align="center">
-            <Text size="sm" c="dimmed">
-              {filteredProducts?.length || 0} {t("Products")}
-            </Text>
-            <Group gap="xs" visibleFrom="sm">
-              <Tooltip label={t("Grid_View")}>
-                <ActionIcon
-                  size="lg"
-                  variant={viewMode === "grid" ? "filled" : "light"}
-                  color="blue"
-                  onClick={() => setViewMode("grid")}
-                  radius="md"
-                >
-                  <BiGridSmall size={20} />
-                </ActionIcon>
-              </Tooltip>
-              <Tooltip label={t("List_View")}>
-                <ActionIcon
-                  size="lg"
-                  variant={viewMode === "list" ? "filled" : "light"}
-                  color="blue"
-                  onClick={() => setViewMode("list")}
-                  radius="md"
-                >
-                  <BiListUl size={20} />
-                </ActionIcon>
-              </Tooltip>
-            </Group>
-          </Group>
-        </Stack>
-
-        {/* Products Display */}
+      {/* Products Display */}
         {!filteredProducts || filteredProducts.length === 0 ? (
-          <Paper p="xl" radius="md" withBorder>
-            <Center style={{minHeight: 300}}>
-              <Stack align="center" gap="lg">
-                <Box
-                  style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: "50%",
-                    background: "var(--mantine-color-gray-1)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                >
-                  <FaGift size={40} color="var(--mantine-color-gray-5)" />
-                </Box>
-                <Stack gap="xs" align="center">
-                  <Title order={3} c="dimmed">
-                    {t("No_products_found")}
-                  </Title>
-                  <Text size="sm" c="dimmed" ta="center">
-                    {searchTerm
-                      ? t("Try_different_search_term")
-                      : t("Click_add_product_to_get_started")}
-                  </Text>
-                </Stack>
-                {!searchTerm && (
-                  <Button
-                    leftSection={<FaPlus size={16} />}
-                    onClick={handleAdd}
-                    variant="light"
-                    size="md"
-                  >
-                    {t("Add_Your_First_Product")}
-                  </Button>
-                )}
+          <Center style={{minHeight: 300}}>
+            <Stack align="center" gap="lg">
+              <Box
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: "50%",
+                  background: "var(--mantine-color-gray-1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <FaGift size={40} color="var(--mantine-color-gray-5)" />
+              </Box>
+              <Stack gap="xs" align="center">
+                <Title order={3} c="dimmed">
+                  {t("No_products_found")}
+                </Title>
+                <Text size="sm" c="dimmed" ta="center">
+                  {searchTerm
+                    ? t("Try_different_search_term")
+                    : t("Click_add_product_to_get_started")}
+                </Text>
               </Stack>
-            </Center>
-          </Paper>
+              {!searchTerm && (
+                <Button
+                  leftSection={<FaPlus size={16} />}
+                  onClick={handleAdd}
+                  variant="light"
+                  size="md"
+                >
+                  {t("Add_Your_First_Product")}
+                </Button>
+              )}
+            </Stack>
+          </Center>
         ) : viewMode === "grid" ? (
-          <SimpleGrid cols={{base: 1, sm: 2, md: 3, lg: 4}} spacing="lg">
+          <SimpleGrid cols={{base: 1, sm: 2, md: 3, lg: 4}} spacing={{ base: "sm", sm: "md" }}>
             {filteredProducts.map((product, index) => (
-              <Card
+              <Paper
                 key={product._id}
                 shadow="sm"
-                padding="lg"
+                p={{ base: "sm", sm: "md" }}
                 radius="md"
                 withBorder
                 style={{
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  cursor: "pointer",
+                  transition: "all 0.2s ease",
                   height: "100%",
                   display: "flex",
-                  flexDirection: "column"
+                  flexDirection: "column",
+                  overflow: "hidden"
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-8px)"
-                  e.currentTarget.style.boxShadow =
-                    "0 20px 40px rgba(0, 0, 0, 0.12)"
+                  e.currentTarget.style.transform = "translateY(-2px)"
+                  e.currentTarget.style.boxShadow = "var(--mantine-shadow-md)"
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)"
                   e.currentTarget.style.boxShadow = "var(--mantine-shadow-sm)"
                 }}
               >
-                <Card.Section>
-                  <Box style={{position: "relative"}}>
-                    <Image
-                      src={product.image}
-                      height={200}
-                      alt={
-                        currentLang === "ar"
-                          ? product.title?.ar
-                          : product.title?.en
-                      }
-                      fallbackSrc="https://via.placeholder.com/400x300?text=No+Image"
-                      style={{objectFit: "cover"}}
-                    />
-                    {!product.status && (
-                      <Badge
-                        color="red"
+                <Box style={{position: "relative", margin: "-0.75rem -0.75rem 0 -0.75rem"}}>
+                  <Image
+                    src={product.image}
+                    height={{ base: 160, sm: 180 }}
+                    alt={
+                      currentLang === "ar"
+                        ? product.title?.ar
+                        : product.title?.en
+                    }
+                    fallbackSrc="https://via.placeholder.com/400x300?text=No+Image"
+                    style={{objectFit: "cover"}}
+                  />
+                  {!product.status && (
+                    <Badge
+                      color="red"
+                      variant="filled"
+                      size="sm"
+                      style={{
+                        position: "absolute",
+                        top: 8,
+                        left: 8
+                      }}
+                    >
+                      {t("Inactive")}
+                    </Badge>
+                  )}
+                  <Group
+                    gap="xs"
+                    style={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8
+                    }}
+                  >
+                    <Tooltip label={t("Edit")} position="left" withArrow>
+                      <ActionIcon
                         variant="filled"
-                        style={{
-                          position: "absolute",
-                          top: 10,
-                          left: 10
-                        }}
+                        color="primary"
+                        radius="md"
+                        size="md"
+                        onClick={() => handleEdit(product)}
                       >
-                        {t("Inactive")}
-                      </Badge>
-                    )}
-                    <Menu position="bottom-end" shadow="md">
-                      <Menu.Target>
-                        <ActionIcon
-                          variant="filled"
-                          color="dark"
-                          radius="xl"
-                          size="lg"
-                          style={{
-                            position: "absolute",
-                            top: 10,
-                            right: 10,
-                            opacity: 0.9
-                          }}
-                        >
-                          <FaEllipsisV size={14} />
-                        </ActionIcon>
-                      </Menu.Target>
-                      <Menu.Dropdown>
-                        <Menu.Item
-                          leftSection={<FaEdit size={14} />}
-                          onClick={() => handleEdit(product)}
-                        >
-                          {t("Edit")}
-                        </Menu.Item>
-                        <Menu.Item
-                          leftSection={<FaTrash size={14} />}
-                          color="red"
-                          onClick={() => handleDelete(product, index)}
-                          disabled={deleteLoading && deleteIndex === index}
-                        >
-                          {deleteLoading && deleteIndex === index
-                            ? t("Deleting")
-                            : t("Delete")}
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
-                  </Box>
-                </Card.Section>
+                        <FaEdit size={14} />
+                      </ActionIcon>
+                    </Tooltip>
+                    <Tooltip label={t("Delete")} position="left" withArrow>
+                      <ActionIcon
+                        variant="filled"
+                        color="red"
+                        radius="md"
+                        size="md"
+                        onClick={() => handleDelete(product, index)}
+                        loading={deleteLoading && deleteIndex === index}
+                      >
+                        <FaTrash size={14} />
+                      </ActionIcon>
+                    </Tooltip>
+                  </Group>
+                </Box>
 
-                <Stack gap="sm" mt="md" style={{flex: 1}}>
+                <Stack gap="xs" mt="md" style={{flex: 1}}>
+                  {/* Title */}
+                  <Text
+                    size="sm"
+                    fw={600}
+                    lineClamp={2}
+                    style={{minHeight: "2.5rem"}}
+                  >
+                    {currentLang === "ar"
+                      ? product.title?.ar
+                      : product.title?.en}
+                  </Text>
+
                   {/* Category Badge */}
                   {product.category && (
                     <Badge
                       variant="light"
-                      color="blue"
-                      size="sm"
-                      leftSection={<FaTag size={10} />}
+                      color="primary"
+                      size="xs"
                       style={{alignSelf: "flex-start"}}
                     >
                       {product.category}
                     </Badge>
                   )}
 
-                  {/* Title */}
-                  <Title order={4} lineClamp={2} fw={600}>
-                    {currentLang === "ar"
-                      ? product.title?.ar
-                      : product.title?.en}
-                  </Title>
-
-                  {/* Description */}
-                  {(product.description?.ar || product.description?.en) && (
-                    <Text size="sm" c="dimmed" lineClamp={2}>
-                      {currentLang === "ar"
-                        ? product.description?.ar
-                        : product.description?.en}
-                    </Text>
-                  )}
-
                   <Box mt="auto">
-                    <Divider my="sm" />
+                    <Divider my="xs" />
                     {/* Price and Points */}
                     <Group justify="space-between" align="center">
-                      <Box>
-                        <Text size="xs" c="dimmed" fw={500}>
+                      <Stack gap={0}>
+                        <Text size="xs" c="dimmed">
                           {t("Price")}
                         </Text>
-                        <Text size="xl" fw={700} c="blue">
+                        <Text size="lg" fw={600} c="primary">
                           {product.price} {t("EGP")}
                         </Text>
-                      </Box>
-                      <Box ta="right">
-                        <Text size="xs" c="dimmed" fw={500}>
+                      </Stack>
+                      <Stack gap={0} align="flex-end">
+                        <Text size="xs" c="dimmed">
                           {t("Points")}
                         </Text>
-                        <Group gap={4} justify="flex-end">
-                          <FaCoins
-                            size={16}
-                            color="var(--mantine-color-orange-6)"
-                          />
-                          <Text size="lg" fw={700} c="orange">
+                        <Group gap={4}>
+                          <Text size="lg" fw={600} c="secondary">
                             {calculatePoints(product.price)}
                           </Text>
+                          <Text size="xs" c="dimmed">
+                            {t("pt")}
+                          </Text>
                         </Group>
-                      </Box>
+                      </Stack>
                     </Group>
                   </Box>
                 </Stack>
-              </Card>
+              </Paper>
             ))}
           </SimpleGrid>
         ) : (
-          <Stack gap="md">
+          <Stack gap={{ base: "sm", sm: "md" }}>
             {filteredProducts.map((product, index) => (
               <Paper
                 key={product._id}
                 shadow="sm"
+                p={{ base: "sm", sm: "md" }}
                 radius="md"
                 withBorder
                 style={{
                   overflow: "hidden",
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  cursor: "pointer"
+                  transition: "all 0.2s ease"
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateX(4px)"
-                  e.currentTarget.style.boxShadow =
-                    "0 8px 24px rgba(0, 0, 0, 0.12)"
+                  e.currentTarget.style.transform = "translateY(-2px)"
+                  e.currentTarget.style.boxShadow = "var(--mantine-shadow-md)"
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateX(0)"
+                  e.currentTarget.style.transform = "translateY(0)"
                   e.currentTarget.style.boxShadow = "var(--mantine-shadow-sm)"
                 }}
               >
-                <Group wrap="nowrap" align="stretch" gap={0}>
+                <Group wrap="nowrap" align="flex-start" gap={{ base: "sm", sm: "md" }}>
                   {/* Product Image */}
                   <Box
                     style={{
-                      width: 200,
-                      minWidth: 200,
-                      height: 200,
+                      width: "100px",
+                      minWidth: "100px",
+                      height: "100px",
                       position: "relative",
-                      overflow: "hidden"
+                      overflow: "hidden",
+                      borderRadius: "var(--mantine-radius-md)"
                     }}
+                    sx={(theme) => ({
+                      [theme.fn?.largerThan?.('sm') || '@media (min-width: 768px)']: {
+                        width: "150px",
+                        minWidth: "150px",
+                        height: "150px"
+                      }
+                    })}
                   >
                     <Image
                       src={product.image}
@@ -468,10 +457,11 @@ const Gifts = ({selectedService}) => {
                       <Badge
                         color="red"
                         variant="filled"
+                        size="xs"
                         style={{
                           position: "absolute",
-                          top: 10,
-                          left: 10,
+                          top: 8,
+                          left: 8,
                           zIndex: 1
                         }}
                       >
@@ -481,110 +471,97 @@ const Gifts = ({selectedService}) => {
                   </Box>
 
                   {/* Product Details */}
-                  <Box p="lg" style={{flex: 1}}>
-                    <Group
-                      justify="space-between"
-                      align="flex-start"
-                      wrap="nowrap"
-                    >
-                      <Stack gap="sm" style={{flex: 1}}>
-                        {/* Category Badge */}
-                        {product.category && (
-                          <Badge
-                            variant="light"
-                            color="blue"
-                            size="md"
-                            leftSection={<FaTag size={12} />}
-                            style={{alignSelf: "flex-start"}}
-                          >
-                            {product.category}
-                          </Badge>
-                        )}
+                  <Stack gap="xs" style={{flex: 1}}>
+                    {/* Category Badge */}
+                    {product.category && (
+                      <Badge
+                        variant="light"
+                        color="primary"
+                        size="xs"
+                        style={{alignSelf: "flex-start"}}
+                      >
+                        {product.category}
+                      </Badge>
+                    )}
 
-                        {/* Title */}
-                        <Title order={3} fw={600} lineClamp={1}>
-                          {currentLang === "ar"
-                            ? product.title?.ar
-                            : product.title?.en}
-                        </Title>
+                    {/* Title */}
+                    <Text size="md" fw={600} lineClamp={1}>
+                      {currentLang === "ar"
+                        ? product.title?.ar
+                        : product.title?.en}
+                    </Text>
 
-                        {/* Description */}
-                        {(product.description?.ar ||
-                          product.description?.en) && (
-                          <Text size="sm" c="dimmed" lineClamp={2}>
-                            {currentLang === "ar"
-                              ? product.description?.ar
-                              : product.description?.en}
+                    {/* Description */}
+                    {(product.description?.ar || product.description?.en) && (
+                      <Text size="sm" c="dimmed" lineClamp={2}>
+                        {currentLang === "ar"
+                          ? product.description?.ar
+                          : product.description?.en}
+                      </Text>
+                    )}
+
+                    <Divider my="xs" />
+
+                    {/* Price and Points */}
+                    <Group justify="space-between" align="center">
+                      <Group gap="lg">
+                        <Stack gap={0}>
+                          <Text size="xs" c="dimmed">
+                            {t("Price")}
                           </Text>
-                        )}
+                          <Text size="lg" fw={600} c="primary">
+                            {product.price} {t("EGP")}
+                          </Text>
+                        </Stack>
+                        <Divider orientation="vertical" />
+                        <Stack gap={0}>
+                          <Text size="xs" c="dimmed">
+                            {t("Points")}
+                          </Text>
+                          <Group gap={4}>
+                            <Text size="lg" fw={600} c="secondary">
+                              {calculatePoints(product.price)}
+                            </Text>
+                            <Text size="xs" c="dimmed">
+                              {t("pt")}
+                            </Text>
+                          </Group>
+                        </Stack>
+                      </Group>
 
-                        {/* Price and Points */}
-                        <Group gap="xl" mt="md">
-                          <Box>
-                            <Text size="xs" c="dimmed" fw={500} mb={4}>
-                              {t("Price")}
-                            </Text>
-                            <Text size="xl" fw={700} c="blue">
-                              {product.price} {t("EGP")}
-                            </Text>
-                          </Box>
-                          <Divider orientation="vertical" />
-                          <Box>
-                            <Text size="xs" c="dimmed" fw={500} mb={4}>
-                              {t("Points")}
-                            </Text>
-                            <Group gap={6}>
-                              <FaCoins
-                                size={18}
-                                color="var(--mantine-color-orange-6)"
-                              />
-                              <Text size="xl" fw={700} c="orange">
-                                {calculatePoints(product.price)}
-                              </Text>
-                            </Group>
-                          </Box>
-                        </Group>
-                      </Stack>
-
-                      {/* Actions Menu */}
-                      <Menu position="bottom-end" shadow="md">
-                        <Menu.Target>
+                      {/* Actions */}
+                      <Group gap="xs">
+                        <Tooltip label={t("Edit")} position="left" withArrow>
                           <ActionIcon
                             variant="light"
-                            color="gray"
+                            color="primary"
                             radius="md"
-                            size="lg"
-                          >
-                            <FaEllipsisV size={16} />
-                          </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                          <Menu.Item
-                            leftSection={<FaEdit size={14} />}
+                            size="md"
                             onClick={() => handleEdit(product)}
                           >
-                            {t("Edit")}
-                          </Menu.Item>
-                          <Menu.Item
-                            leftSection={<FaTrash size={14} />}
+                            <FaEdit size={14} />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label={t("Delete")} position="left" withArrow>
+                          <ActionIcon
+                            variant="light"
                             color="red"
+                            radius="md"
+                            size="md"
                             onClick={() => handleDelete(product, index)}
-                            disabled={deleteLoading && deleteIndex === index}
+                            loading={deleteLoading && deleteIndex === index}
                           >
-                            {deleteLoading && deleteIndex === index
-                              ? t("Deleting")
-                              : t("Delete")}
-                          </Menu.Item>
-                        </Menu.Dropdown>
-                      </Menu>
+                            <FaTrash size={14} />
+                          </ActionIcon>
+                        </Tooltip>
+                      </Group>
                     </Group>
-                  </Box>
+                  </Stack>
                 </Group>
               </Paper>
             ))}
           </Stack>
         )}
-      </Stack>
 
       {/* Add/Edit Modal */}
       <AddUpdateProductModal
@@ -594,7 +571,7 @@ const Gifts = ({selectedService}) => {
         onShow={setShow}
         products={products || []}
       />
-    </Container>
+    </Stack>
   )
 }
 

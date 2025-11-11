@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import {FaFemale, FaMale, FaThumbsUp} from "react-icons/fa"
 import {useDispatch, useSelector} from "react-redux"
 import {getUsers, postAttend} from "../actions/userActions"
@@ -12,7 +12,11 @@ import {
   Text,
   Loader,
   Anchor,
-  Title
+  Title,
+  Card,
+  Paper,
+  ActionIcon,
+  Tooltip
 } from "@mantine/core"
 import {notifications} from "@mantine/notifications"
 import Lottie from "react-lottie-player"
@@ -37,35 +41,59 @@ function AttendanceList({userInfo}) {
   const [male, setMale] = useState(0)
   const [female, setFemale] = useState(0)
 
+  // Automatically load all users when component mounts
+  useEffect(() => {
+    if (selected?.service?._id) {
+      const filter = {
+        serviceId: selected.service._id,
+        requestType: "RESPONSE"
+      }
+      dispatch(getUsers(filter))
+    }
+  }, [selected?.service?._id, dispatch])
+
   const changeMaleStatus = () => {
-    let filter = {classId}
-    if (!male) filter.gender = ["MALE"]
-    getList(filter)
-    setMale(!male)
+    const newMale = !male
+    setMale(newMale)
     setFemale(0)
+
+    const filter = {
+      serviceId: selected?.service?._id,
+      requestType: "RESPONSE"
+    }
+    if (classId) filter.classId = classId
+    if (newMale) filter.gender = ["MALE"]
+
+    dispatch(getUsers(filter))
   }
 
   const changeFemaleStatus = () => {
-    let filter = {classId}
-    if (!female) filter.gender = ["FEMALE"]
-    getList(filter)
-    setFemale(!female)
+    const newFemale = !female
+    setFemale(newFemale)
     setMale(0)
+
+    const filter = {
+      serviceId: selected?.service?._id,
+      requestType: "RESPONSE"
+    }
+    if (classId) filter.classId = classId
+    if (newFemale) filter.gender = ["FEMALE"]
+
+    dispatch(getUsers(filter))
   }
 
   const updateClassId = (id) => {
-    getList({classId: id})
     setClassId(id)
     setMale(0)
     setFemale(0)
-  }
 
-  const getList = (filter) => {
-    if (filter.classId) {
-      filter.serviceId = selected?.service?._id
-      filter.requestType = "RESPONSE"
-      dispatch(getUsers(filter))
+    const filter = {
+      serviceId: selected?.service?._id,
+      requestType: "RESPONSE"
     }
+    if (id) filter.classId = id
+
+    dispatch(getUsers(filter))
   }
 
   const handleBarcode = async (userId) => {
@@ -132,69 +160,119 @@ function AttendanceList({userInfo}) {
   }
 
   return (
-    <Stack w={"100%"}>
-      <Group justify="center" spacing="md" gap={5} w={"100%"}>
-        <Select
-          p={0}
-          m={0}
-          data={selected?.service?.classes?.map((classData) => ({
-            label: classData.name,
-            value: classData._id
-          }))}
-          onChange={(value) => updateClassId(value)}
-          placeholder={t("Select_Class")}
-        />
-        <Button
-          m={2}
-          p={2}
-          disabled={!classId}
-          variant={male ? "filled" : "outline"}
-          onClick={changeMaleStatus}
-        >
-          <FaMale size={22} />
-        </Button>
-        <Button
-          m={1}
-          p={1}
-          disabled={!classId}
-          variant={female ? "filled" : "outline"}
-          onClick={changeFemaleStatus}
-        >
-          <FaFemale size={22} />
-        </Button>
-      </Group>
-      <Stack ta={"center"}>
-        {loading ? (
-          <Loader style={{alignSelf: "center"}} />
-        ) : users?.length ? (
-          users.map((user, index) => (
-            <Group
+    <Stack w={"100%"} gap="lg">
+      {/* Filter Controls */}
+      <Paper shadow="sm" radius="md" p="md" withBorder>
+        <Group justify="center" gap="md">
+          <Select
+            style={{ flex: 1, maxWidth: 300 }}
+            data={selected?.service?.classes?.map((classData) => ({
+              label: classData.name,
+              value: classData._id
+            }))}
+            value={classId}
+            onChange={(value) => updateClassId(value)}
+            placeholder={t("All_Classes")}
+            clearable
+            clearButtonProps={{
+              "aria-label": t("Clear_Filter")
+            }}
+          />
+          <Button
+            variant={male ? "filled" : "light"}
+            color={male ? "blue" : "gray"}
+            onClick={changeMaleStatus}
+            leftSection={<FaMale size={18} />}
+            size="md"
+          >
+            {t("Male")}
+          </Button>
+          <Button
+            variant={female ? "filled" : "light"}
+            color={female ? "pink" : "gray"}
+            onClick={changeFemaleStatus}
+            leftSection={<FaFemale size={18} />}
+            size="md"
+          >
+            {t("Female")}
+          </Button>
+        </Group>
+      </Paper>
+
+      {/* Users List */}
+      {loading ? (
+        <Paper shadow="sm" radius="md" p="xl" withBorder>
+          <Stack align="center" gap="md">
+            <Loader size="lg" />
+            <Text c="dimmed">{t("Loading_users")}...</Text>
+          </Stack>
+        </Paper>
+      ) : users?.length ? (
+        <Stack gap="md">
+          {users.map((user, index) => (
+            <Card
               key={index}
-              align="center"
-              spacing="sm"
-              justify="space-between"
+              shadow="sm"
+              radius="md"
+              padding="md"
+              withBorder
+              style={{
+                transition: "transform 0.2s ease, box-shadow 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)"
+                e.currentTarget.style.boxShadow = "var(--mantine-shadow-md)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)"
+                e.currentTarget.style.boxShadow = "var(--mantine-shadow-sm)"
+              }}
             >
-              <Group p={0} m={0}>
-                <Avatar src={user?.userDetails?.image} radius="xl" size="lg" />
-                <Stack spacing="xs">
-                  <Text size="sm">
-                    {`${user?.userDetails?.firstName} ${
-                      user?.userDetails?.fatherName
-                    } ${user?.userDetails?.familyName || ""}`}
-                  </Text>
-                </Stack>
+              <Group justify="space-between" align="center">
+                <Group gap="md">
+                  <Avatar
+                    src={user?.userDetails?.image}
+                    radius="md"
+                    size="lg"
+                  />
+                  <Stack gap={0}>
+                    <Text size="sm" fw={500}>
+                      {`${user?.userDetails?.firstName} ${
+                        user?.userDetails?.fatherName
+                      } ${user?.userDetails?.familyName || ""}`}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {user?.userDetails?.mobile || t("No_mobile")}
+                    </Text>
+                  </Stack>
+                </Group>
+                <Tooltip label={t("Mark_Attendance")} position="left" withArrow>
+                  <ActionIcon
+                    onClick={() => handleBarcode(user.userDetails._id)}
+                    variant="filled"
+                    color="green"
+                    size="xl"
+                    radius="md"
+                  >
+                    <FaThumbsUp size={20} />
+                  </ActionIcon>
+                </Tooltip>
               </Group>
-              <Button onClick={() => handleBarcode(user.userDetails._id)}>
-                <FaThumbsUp />
-              </Button>
-            </Group>
-          ))
-        ) : (
-          <Text size="sm" c="dimmed">
-            {t("Please_Select_Class_First")}
-          </Text>
-        )}
-      </Stack>
+            </Card>
+          ))}
+        </Stack>
+      ) : (
+        <Paper shadow="sm" radius="md" p="xl" withBorder ta="center">
+          <Stack align="center" gap="md">
+            <Text size="lg" fw={500} c="dimmed">
+              {t("No_users_found")}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {t("Try_adjusting_your_filters")}
+            </Text>
+          </Stack>
+        </Paper>
+      )}
     </Stack>
   )
 }
