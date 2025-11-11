@@ -61,7 +61,7 @@ const TopRightMenu = ({userInfo}) => {
     notifications.show({
       loading: false,
       color: "red",
-      title: "تم الخروج من الحساب",
+      title: t("Logged_Out_Successfully"),
       autoClose: 3000,
       withCloseButton: false
     })
@@ -89,7 +89,7 @@ const TopRightMenu = ({userInfo}) => {
         onClose={closeWhy}
         size="xl"
         withCloseButton={false}
-        title="دي المشاكل اللي اتبني علي أساسها السيستم لحلها:"
+        title={t("System_Purpose_Modal_Title")}
         overlayProps={{backgroundOpacity: 0.5, blur: 4}}
       >
         <SystemPurpose />
@@ -108,7 +108,7 @@ const TopRightMenu = ({userInfo}) => {
                 }
               }}
             >
-              {`اهلا ${userInfo?.user?.firstName || ""}`}
+              {`${t("Welcome_User")} ${userInfo?.user?.firstName || ""}`}
             </Button>{" "}
           </Group>
         </Menu.Target>
