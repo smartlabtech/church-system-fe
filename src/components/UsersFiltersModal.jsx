@@ -30,7 +30,7 @@ import {
   FaGraduationCap
 } from "react-icons/fa"
 
-function UsersFiltersModal({searchHandler, classId}) {
+function UsersFiltersModal({searchHandler, applyFilters, classId}) {
   const dispatch = useDispatch()
   const [t, i18n] = useTranslation()
   const isMobile = useMediaQuery('(max-width: 768px)')
@@ -56,74 +56,84 @@ function UsersFiltersModal({searchHandler, classId}) {
   }, [dispatch])
 
   const changeMaleStatus = () => {
-    let newFilters = filters
-    newFilters["male"] = !newFilters["male"]
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        male: !filters.male
+      }
     })
   }
 
   const changeFemaleStatus = () => {
-    let newFilters = filters
-    newFilters["female"] = !newFilters["female"]
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        female: !filters.female
+      }
     })
   }
 
   const updateBirthdayMonth = (index) => {
-    let newFilters = filters
-    newFilters.birthdayMonthes[index] = !newFilters.birthdayMonthes[index]
+    const newBirthdayMonthes = [...filters.birthdayMonthes]
+    newBirthdayMonthes[index] = !newBirthdayMonthes[index]
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        birthdayMonthes: newBirthdayMonthes
+      }
     })
   }
 
   const updateLastAttendance = (index) => {
-    let newFilters = filters
-    newFilters["lastAttendance"] = index + 1
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        lastAttendance: index + 1
+      }
     })
   }
 
   const updateLastFollowUp = (index) => {
-    let newFilters = filters
-    newFilters["lastFollowup"] = index + 1
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        lastFollowup: index + 1
+      }
     })
   }
 
   const updateStatus = (status) => {
-    let newFilters = filters
-    newFilters["status"] = status
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        status: status
+      }
     })
   }
 
   const updateStudy = (value) => {
-    let newFilters = filters
-    newFilters["study"] = value
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        study: value
+      }
     })
   }
 
   const updateSkill = (value) => {
-    let newFilters = filters
-    newFilters["skill"] = value
     dispatch({
       type: SET_USERS_FILTERS,
-      payload: newFilters
+      payload: {
+        ...filters,
+        skill: value
+      }
     })
   }
 
@@ -142,7 +152,13 @@ function UsersFiltersModal({searchHandler, classId}) {
   }
 
   const setFilter = () => {
-    searchHandler(classId)
+    // Apply filters using the applyFilters function (works with or without classId)
+    if (applyFilters) {
+      applyFilters()
+    } else if (classId) {
+      // Fallback to searchHandler for backward compatibility
+      searchHandler(classId)
+    }
     setShow(false)
   }
 

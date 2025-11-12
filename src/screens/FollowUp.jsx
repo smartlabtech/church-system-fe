@@ -91,6 +91,20 @@ function FollowUpScreen() {
     }
   }
 
+  const applyFilters = () => {
+    // Apply filters with or without classId
+    const filter = {
+      serviceId: selectedService._id,
+      requestType: "RESPONSE",
+      status: "IN_CHURCH",
+      ...buildFilters(filters)
+    }
+    if (classId) {
+      filter.classId = classId
+    }
+    dispatch(getUsers(filter))
+  }
+
   const assignedHandler = () => {
     if (classId) {
       const filter = {
@@ -199,6 +213,7 @@ function FollowUpScreen() {
             <Group gap="xs">
               <UsersFiltersModal
                 searchHandler={searchHandler}
+                applyFilters={applyFilters}
                 classId={classId}
               />
 
