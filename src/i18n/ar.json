@@ -544,5 +544,16 @@
     "No_skills_added": "لم تتم إضافة مهارات بعد",
     "Activity_History": "سجل النشاط",
     "Last_Attendance": "آخر حضور",
-    "Last_Follow_Up": "آخر متابعة"
+    "Last_Follow_Up": "آخر متابعة",
+    "Quick_Stats": "إحصائيات سريعة",
+    "Loading_stats": "جاري تحميل الإحصائيات...",
+    "Auto_Updated": "يتم التحديث تلقائيًا",
+    "This_Month_Birthdays": "أعياد ميلاد هذا الشهر",
+    "Birthday_this_month_desc": "الأعضاء الذين لديهم أعياد ميلاد هذا الشهر",
+    "Need_Attendance_Follow_Up": "يحتاجون لمتابعة الحضور",
+    "Not_attended_2_weeks_desc": "لم يحضروا خلال آخر أسبوعين",
+    "Need_Personal_Follow_Up": "يحتاجون لمتابعة شخصية",
+    "Not_followed_up_3_months_desc": "لم تتم متابعتهم خلال آخر 3 أشهر",
+    "person": "شخص",
+    "people": "أشخاص"
 }

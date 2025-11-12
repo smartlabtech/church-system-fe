@@ -46,6 +46,7 @@ import {BiBible, BiStore} from "react-icons/bi"
 import {FaBook} from "react-icons/fa"
 import Gifts from "./gifts/Gifts"
 import ServiceBooksView from "../components/dashboard/ServiceBooksView"
+import DashboardStats from "../components/DashboardStats"
 
 function ServantInScreen() {
   const dispatch = useDispatch()
@@ -174,6 +175,11 @@ function ServantInScreen() {
             <ControlAddUserCard service={selected?.service} />
           </Group>
         </Paper>
+
+        {/* Dashboard Stats */}
+        {selected?.service?._id && (
+          <DashboardStats serviceId={selected.service._id} />
+        )}
 
         {/* Service Cards Grid */}
         <SimpleGrid cols={{ base: 2, sm: 3, lg: 6 }} spacing="md">

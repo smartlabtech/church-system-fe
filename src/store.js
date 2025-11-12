@@ -116,6 +116,7 @@ import {
   churchUpdateReducer,
   churchDeleteReducer
 } from "./reducers/churchReducers"
+import {dashboardStatsReducer} from "./reducers/dashboardStatsReducers"
 
 const reducer = combineReducers({
   successAlert: successAlertReducer,
@@ -200,7 +201,8 @@ const reducer = combineReducers({
   churchList: churchListReducer,
   churchCreate: churchCreateReducer,
   churchUpdate: churchUpdateReducer,
-  churchDelete: churchDeleteReducer
+  churchDelete: churchDeleteReducer,
+  dashboardStats: dashboardStatsReducer
 })
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
