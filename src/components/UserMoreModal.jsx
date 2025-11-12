@@ -399,6 +399,18 @@ const UserMoreModal = ({
                           </Text>
                         </Stack>
                       </Paper>
+
+                      <Paper p="md" bg="grape.0" radius="md">
+                        <Stack gap="xs" align="center">
+                          <FaCalendarAlt size={20} color="purple" />
+                          <Text size="xs" c="dimmed" fw={500}>
+                            {t("Bible_Last_10")}
+                          </Text>
+                          <Text size="sm" fw={600}>
+                            {userDetails?.bibleFollowUp || 0}
+                          </Text>
+                        </Stack>
+                      </Paper>
                     </Group>
                   </Stack>
                 </Card>
