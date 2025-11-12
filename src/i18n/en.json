@@ -510,5 +510,20 @@
     "Choose_how_to_sort_books": "Choose how to sort books",
     "Currently_sorted_by": "Currently sorted by",
     "Sort": "Sort",
-    "Assigned_To_Me": "Assigned To Me"
+    "Assigned_To_Me": "Assigned To Me",
+    "Personal_Info": "Personal Info",
+    "Education_Skills": "Education & Skills",
+    "Activity": "Activity",
+    "Basic_Information": "Basic Information",
+    "Father_of_Confession": "Father of Confession",
+    "Floor": "Floor",
+    "Flat": "Flat",
+    "Landmark": "Landmark",
+    "Education_Work": "Education & Work",
+    "No_education_info": "No education information added yet",
+    "Skills": "Skills",
+    "No_skills_added": "No skills added yet",
+    "Activity_History": "Activity History",
+    "Last_Attendance": "Last Attendance",
+    "Last_Follow_Up": "Last Follow Up"
 }

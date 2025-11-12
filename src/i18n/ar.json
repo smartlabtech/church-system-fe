@@ -529,5 +529,20 @@
     "Choose_how_to_sort_books": "اختر كيفية ترتيب الكتب",
     "Currently_sorted_by": "مرتب حاليًا حسب",
     "Sort": "ترتيب",
-    "Assigned_To_Me": "المسند إلي"
+    "Assigned_To_Me": "المسند إلي",
+    "Personal_Info": "المعلومات الشخصية",
+    "Education_Skills": "التعليم والمهارات",
+    "Activity": "النشاط",
+    "Basic_Information": "المعلومات الأساسية",
+    "Father_of_Confession": "أب الاعتراف",
+    "Floor": "الدور",
+    "Flat": "الشقة",
+    "Landmark": "علامة مميزة",
+    "Education_Work": "التعليم والعمل",
+    "No_education_info": "لم تتم إضافة معلومات تعليمية بعد",
+    "Skills": "المهارات",
+    "No_skills_added": "لم تتم إضافة مهارات بعد",
+    "Activity_History": "سجل النشاط",
+    "Last_Attendance": "آخر حضور",
+    "Last_Follow_Up": "آخر متابعة"
 }
