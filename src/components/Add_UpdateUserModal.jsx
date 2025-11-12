@@ -173,7 +173,8 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
       }
     }
 
-    if (!validMobileRegex.test(mobile)) {
+    // Only validate mobile if it's provided (make it optional)
+    if (mobile && !validMobileRegex.test(mobile)) {
       notifications.show({
         loading: false,
         color: "red",
@@ -278,7 +279,6 @@ function AddUpdateUserModal({userDetails, serviceId, classId, status, onShow}) {
                 placeholder={t("Mobile_placeholder")}
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                required
                 type="tel"
               />
               <TextInput
