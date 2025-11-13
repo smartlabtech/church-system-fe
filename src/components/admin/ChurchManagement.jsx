@@ -24,7 +24,6 @@ import { notifications } from "@mantine/notifications"
 import { useTranslation } from "react-i18next"
 import {
   FaEdit,
-  FaPlus,
   FaChurch,
   FaGlobe,
   FaInfoCircle
@@ -164,27 +163,17 @@ const ChurchManagement = () => {
       <Stack gap="lg">
         {/* Header */}
         <Paper shadow="sm" radius="md" p="md" withBorder>
-          <Group justify="space-between" wrap="wrap" gap="md">
-            <div>
-              <Title order={2} c="primary.6">
-                <Group gap="xs">
-                  <FaChurch size={24} />
-                  {t("Church_Management")}
-                </Group>
-              </Title>
-              <Text size="sm" c="dimmed" mt="xs">
-                {t("Manage_church_settings_and_timezone")}
-              </Text>
-            </div>
-            <Button
-              leftSection={<FaPlus />}
-              onClick={() => handleOpenModal()}
-              variant="filled"
-              fullWidth={isMobile}
-            >
-              {t("Add_Church")}
-            </Button>
-          </Group>
+          <div>
+            <Title order={2} c="primary.6">
+              <Group gap="xs">
+                <FaChurch size={24} />
+                {t("Church_Management")}
+              </Group>
+            </Title>
+            <Text size="sm" c="dimmed" mt="xs">
+              {t("Manage_church_settings_and_timezone")}
+            </Text>
+          </div>
         </Paper>
 
         {/* Info Alert */}

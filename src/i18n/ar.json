@@ -555,5 +555,9 @@
     "Need_Personal_Follow_Up": "يحتاجون لمتابعة شخصية",
     "Not_followed_up_3_months_desc": "لم تتم متابعتهم خلال آخر 3 أشهر",
     "person": "شخص",
-    "people": "أشخاص"
+    "people": "أشخاص",
+    "No_mobile_number_available": "لا يوجد رقم موبايل",
+    "Send_WhatsApp_Message": "إرسال رسالة واتساب",
+    "Contact_Via": "التواصل عبر",
+    "Call": "اتصال"
 }

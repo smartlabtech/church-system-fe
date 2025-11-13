@@ -536,5 +536,9 @@
     "Need_Personal_Follow_Up": "Need Personal Follow-up",
     "Not_followed_up_3_months_desc": "Haven't been followed up in the last 3 months",
     "person": "person",
-    "people": "people"
+    "people": "people",
+    "No_mobile_number_available": "No mobile number available",
+    "Send_WhatsApp_Message": "Send WhatsApp Message",
+    "Contact_Via": "Contact Via",
+    "Call": "Call"
 }
